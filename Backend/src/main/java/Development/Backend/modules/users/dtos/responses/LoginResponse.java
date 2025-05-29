@@ -7,6 +7,4 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class LoginResponse {
   private final UserResponse user;
-  private final String access;
-  private final String refresh;
 }

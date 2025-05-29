@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import mapboxgl from 'mapbox-gl';
 
-const MapboxMap = () => {
+function MapboxMap () {
   mapboxgl.accessToken = 'pk.eyJ1IjoicXVhbmdhbmgwMTEwIiwiYSI6ImNsdTVzcDd1YTFxZDUyamw4a3Eyd3kzeHgifQ.Cjd2-WvzHRTbBvLTQww1ew';
   const COORDINATE = [105.8431, 21.0054];
   const MARKER_INFO = '<h3>Hanoi University of Science and Technology</h3><h4>IPAC, C5-405, HUST</h4>';

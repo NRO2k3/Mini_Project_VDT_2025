@@ -13,7 +13,7 @@ import CopyRight from '../components/CopyRight';
 import MapboxMap from '../components/MapboxMap';
 
 
-const Footer = () => {
+function Footer() {
     const footers = [
         {
             title: "Phone",

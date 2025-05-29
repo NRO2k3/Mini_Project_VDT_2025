@@ -11,8 +11,10 @@ import org.springframework.stereotype.Service;
 import Development.Backend.modules.users.entities.User;
 import Development.Backend.modules.users.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService{
 
@@ -23,6 +25,7 @@ public class CustomUserDetailsService implements UserDetailsService{
 
     User user = userRepository.findById(Long.valueOf(userId)).orElseThrow(()-> new UsernameNotFoundException("User Không Tồn Tại"));
     String role = user.getRoleId().getName();
+    log.info(role);
     return new org.springframework.security.core.userdetails.User(
       user.getEmail(),
       user.getPassword(),

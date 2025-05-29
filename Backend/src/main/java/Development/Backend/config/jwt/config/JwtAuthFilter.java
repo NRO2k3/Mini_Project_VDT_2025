@@ -19,6 +19,7 @@ import Development.Backend.config.jwt.services.JwtService;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
@@ -37,7 +38,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(@NonNull HttpServletRequest request){
       String path = request.getRequestURI();
-      return path.startsWith("/api/v1/auth/login")||path.startsWith("/api/v1/auth/refresh")||path.startsWith("/api/v1/auth/register");
+      return path.startsWith("/api/v1/auth/login")||path.startsWith("/api/v1/auth/token/refresh")||path.startsWith("/api/v1/auth/register");
     }
 
     @Override
@@ -47,16 +48,26 @@ public class JwtAuthFilter extends OncePerRequestFilter {
       @NonNull FilterChain filterChain) throws ServletException, IOException{
     
       try {
-        String authHeader = request.getHeader("Authorization");
-        String jwt;
+        log.info("JwtAuthFilter is called for URL: {}", request.getRequestURI());
+        String jwt= null;
         String userId;
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-          sendErrorResponse(response, request, HttpServletResponse.SC_UNAUTHORIZED, "Xác thực không thành không", "Không tìm thấy Token");
-          log.error("Error Token Miss");
-          return;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("access_token".equals(cookie.getName())) {
+                    jwt = cookie.getValue();
+                    break;
+                }
+            }
         }
-        jwt = authHeader.substring(7);
+
+        if (jwt == null) {
+            sendErrorResponse(response, request, HttpServletResponse.SC_UNAUTHORIZED,
+                "Xác thực không thành công", "Không tìm thấy Token trong cookie");
+            log.error("Không có JWT trong cookie");
+            return;
+        }
 
         if(!jwtService.isTokenFormatValid(jwt)){
           sendErrorResponse(response, request, HttpServletResponse.SC_UNAUTHORIZED, "Xác thực không thành không", "Token Không đúng định dạng");
@@ -76,11 +87,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         if(jwtService.isTokenExpired(jwt)){
           sendErrorResponse(response, request, HttpServletResponse.SC_UNAUTHORIZED, "Xác thực không thành không", "Token hết hạn");
-          return;
-        }
-
-        if(jwtService.isBlacklistdToken(jwt)){
-          sendErrorResponse(response, request, HttpServletResponse.SC_UNAUTHORIZED, "Xác thực không thành không", "Token bị khóa");
           return;
         }
 

@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
-import LoginForm from "./pages/Login";
 import { createContext, useState } from 'react';
+import RoutesPage from "./routes/RoutesPage";
 
 export const host = process.env.REACT_APP_BACKEND_URL;
 export const ParamContext = createContext();
@@ -11,17 +11,17 @@ const theme = createTheme({
     },
 });
 function App() {
-    const [isSignIn, setIsSignin] = useState(false);
-    const [signUp, setSignUp] = useState(false);
+    const [isSignIn, setIsSignin] = useState(()=> {return localStorage.getItem("isSignIn") === "true";});
+    
     return (
-        <ParamContext.Provider value={{isSignIn, setIsSignin, signUp, setSignUp, host}}>
+        <ParamContext.Provider value={{isSignIn, setIsSignin, host}}>
             <ThemeProvider theme={theme}>
                 <CssBaseline/>
                 <Box sx={{
                     width: '100%',
                     height: '100%',
                 }}>
-                    <LoginForm/>
+                    <RoutesPage/>
                 </Box>
             </ThemeProvider>
         </ParamContext.Provider>

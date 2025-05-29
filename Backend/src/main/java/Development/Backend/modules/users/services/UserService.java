@@ -5,9 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import Development.Backend.config.jwt.dtos.requests.BlacklistTokenRequest;
 import Development.Backend.config.jwt.services.BlacklistService;
-import Development.Backend.config.jwt.services.JwtService;
 import Development.Backend.handlers.custom_exception.ErrorException;
 import Development.Backend.modules.users.dtos.requests.LoginRequest;
 import Development.Backend.modules.users.dtos.requests.RegisterRequest;
@@ -17,6 +15,7 @@ import Development.Backend.modules.users.entities.Role;
 import Development.Backend.modules.users.entities.User;
 import Development.Backend.modules.users.repositories.RoleRepository;
 import Development.Backend.modules.users.repositories.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -27,16 +26,13 @@ public class UserService{
   private PasswordEncoder passwordEncoder;
 
   @Autowired
-  private BlacklistService blacklistService;
-
-  @Autowired
   private UserRepository userRepository;
 
   @Autowired
   private RoleRepository roleRepository;
 
-    @Autowired
-  private JwtService jwtService;
+  @Autowired
+  private BlacklistService blacklistService;
 
   public LoginResponse authenticate (LoginRequest request){
 
@@ -53,15 +49,11 @@ public class UserService{
                                             .phone(user.getPhone())
                                             .role(user.getRoleId().getId())
                                             .build();
-    String accessToken = jwtService.generateToken(user.getId(), user.getEmail());
-    String refreshToken = jwtService.generateRefreshToken(user.getId(), user.getEmail());
-    return new LoginResponse(userResource, accessToken, refreshToken);
+    return new LoginResponse(userResource);
   }
 
-  public void logOutUser(String token){
+  public void logOutUser(HttpServletRequest request){
     try {
-      BlacklistTokenRequest request = new BlacklistTokenRequest();
-      request.setRefreshToken(token);
       blacklistService.create(request);
     } catch (Exception e) {
       throw e;

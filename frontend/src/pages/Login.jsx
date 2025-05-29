@@ -1,9 +1,8 @@
 import React, { useContext } from 'react'
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
+import { Link } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -12,9 +11,11 @@ import Container from '@mui/material/Container';
 import CopyRight from '../components/CopyRight';
 import { login } from '../api/auth';
 import { ParamContext } from '../App';
+import { useNavigate } from "react-router-dom";
 
 function Login() {
-    const { host } = useContext(ParamContext);
+    const { setIsSignin, host} = useContext(ParamContext);
+    const navigate = useNavigate();
     const handleSubmit = async (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -22,14 +23,18 @@ function Login() {
         const password = data.get("password");
     
         try {
-            await login(username, password, host);
+            let check = await login(username, password, host);
+            if(check){
+                localStorage.setItem("isSignIn", "true");
+                setIsSignin(true);
+                navigate("/home");
+            }
         } catch (err) {
             alert("Login failed: " + err.message);
         }
         };
     return (
     <Container component="main" maxWidth="xs">
-        <CssBaseline/>
         <Box
         sx={{
             marginTop: 8,
@@ -85,7 +90,7 @@ function Login() {
                     </Link>
                 </Grid>
                 <Grid item>
-                    <Link variant="body2" sx={{ cursor: 'pointer' }}>
+                    <Link to="/signup" variant="body2" sx={{ cursor: 'pointer' }}>
                         Sign Up?
                     </Link>
                 </Grid>

@@ -4,26 +4,45 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import Development.Backend.config.jwt.dtos.requests.RefreshTokenRequest;
-import Development.Backend.config.jwt.dtos.responses.RefreshTokenResponse;
 import Development.Backend.handlers.custom_exception.ErrorException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 public class RefreshService {
 
   @Autowired
   private JwtService jwtService;
 
-  public RefreshTokenResponse getRefreshToken(RefreshTokenRequest request){
-    String refreshToken = request.getRefreshToken();
-    if(!jwtService.isRefreshTokenValid(refreshToken)){
-      throw new ErrorException("refreshToken không đúng định dạng hoặc hết hạng", HttpStatus.BAD_REQUEST);
+  public String getAccessToken(HttpServletRequest request){
+
+    Cookie[] cookies = request.getCookies();
+    String refreshToken = null;
+
+    if (cookies != null) {
+      for (Cookie cookie : cookies) {
+        if ("refresh_token".equals(cookie.getName())) {
+          refreshToken = cookie.getValue();
+          break;
+        }
+      }
+    } else {
+      throw new ErrorException("Token không có trong Cookie", HttpStatus.BAD_REQUEST);
+    }
+    
+    if(refreshToken == null) throw new ErrorException("Token không có trường refresh_token trong Cookie", HttpStatus.BAD_REQUEST);
+    else{
+      if(jwtService.isBlacklistdToken(refreshToken) || !jwtService.isIssuerToken(refreshToken) || !jwtService.isSignatureValid(refreshToken) || jwtService.isTokenExpired(refreshToken)){
+        throw new ErrorException("Token vi phạm điều kiện", HttpStatus.BAD_REQUEST);
+      }
     }
 
-    Long userId = Long.valueOf(jwtService.extractUserId(refreshToken));
+    String userId = jwtService.extractUserId(refreshToken);
     String email = jwtService.extractEmail(refreshToken);
-    String newToken = jwtService.generateToken(userId, email);
+    String accessToken = jwtService.generateToken(Long.valueOf(userId), email);
 
-    return new RefreshTokenResponse(newToken);
+    return accessToken;
   }
 }
