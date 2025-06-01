@@ -22,12 +22,11 @@ function Signup() {
         if(data.get('password') !== data.get('password_verify')){
             alert("Password and Verify Password must be the same!")
         } else {
-            alert("Valid!")
             const dataRequest= {"name": data.get("username"),
                                 "password": data.get("password"),
                                 "email": data.get("email"),
                                 "phone": data.get("phone")};
-            let isSuccessfull = await create_user(dataRequest, host);
+            let isSuccessfull = await create_user(dataRequest);
             if(isSuccessfull === true){
               navigate("/login");
             }

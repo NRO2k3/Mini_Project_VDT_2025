@@ -1,13 +1,13 @@
 import React from 'react'
 import { Routes, Route } from 'react-router-dom';
 import Home from '../pages/Home';
-import Configuration from '../pages/Configuration';
 import Login from '../pages/Login';
 import Signup from '../pages/Signup';
 import AuthRoute from '../components/AuthRoute';
 import DashboardSaving from '../pages/DashboardSaving';
 import Savings from '../pages/Savings';
-
+import Page from '../pages/configuration/Page';
+import Customer from '../pages/configuration/Customer';
 
 function RoutesPage() {
   return (
@@ -63,14 +63,24 @@ function RoutesPage() {
         }
       />
       <Route
-        path="/configuration"
+        path="/configuration/page"
         element={
           <AuthRoute authRequired={true}>
-            <Configuration />
+            <Page/>
+          </AuthRoute>
+        }
+      />
+      <Route
+        path="/configuration/customer"
+        element={
+          <AuthRoute authRequired={true}>
+            <Customer/>
           </AuthRoute>
         }
       />
     </Routes>
+
+    
   );
 }
 

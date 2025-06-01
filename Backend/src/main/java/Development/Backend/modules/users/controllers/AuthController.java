@@ -1,11 +1,8 @@
 package Development.Backend.modules.users.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,14 +13,9 @@ import Development.Backend.config.jwt.dtos.responses.RefreshTokenResponse;
 import Development.Backend.config.jwt.services.BlacklistService;
 import Development.Backend.config.jwt.services.JwtService;
 import Development.Backend.config.jwt.services.RefreshService;
-import Development.Backend.handlers.custom_exception.ErrorException;
 import Development.Backend.modules.users.dtos.requests.LoginRequest;
-import Development.Backend.modules.users.dtos.requests.RegisterRequest;
 import Development.Backend.modules.users.dtos.responses.ApiResponse;
 import Development.Backend.modules.users.dtos.responses.LoginResponse;
-import Development.Backend.modules.users.dtos.responses.UserResponse;
-import Development.Backend.modules.users.entities.User;
-import Development.Backend.modules.users.repositories.UserRepository;
 import Development.Backend.modules.users.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -40,9 +32,6 @@ public class AuthController {
 
   @Autowired
   private BlacklistService blacklistService;
-
-  @Autowired
-  private UserRepository userRepository;
 
   @Autowired
   private RefreshService refreshService;
@@ -95,34 +84,9 @@ public class AuthController {
     .body(response);
   }
 
-  @PostMapping("register")
-  public ResponseEntity<ApiResponse<?>> register(@Valid @RequestBody RegisterRequest request) {
-    userService.registerUser(request);
-    ApiResponse<?> response = ApiResponse.ok(null, "Tạo tài khoản thành công");
-    return ResponseEntity.ok(response);
-  }
-
   @PostMapping("token/verify")
   public ResponseEntity<ApiResponse<?>> verifyToken(HttpServletRequest request) {
     ApiResponse<?> response = ApiResponse.ok(null, "Check thành công qua filter");
-    return ResponseEntity.ok(response);
-  }
-
-  @GetMapping("me")
-  public ResponseEntity<ApiResponse<UserResponse>> me(){
-
-    String email = SecurityContextHolder.getContext().getAuthentication().getName();
-
-    User user = userRepository.findByEmail(email).orElseThrow(()-> new ErrorException("User Không Tồn Tại",HttpStatus.BAD_REQUEST));
-
-    UserResponse userResource = UserResponse.builder()
-                                            .id(user.getId())
-                                            .email(user.getEmail())
-                                            .name(user.getName())
-                                            .phone(user.getPhone())
-                                            .build();
-
-    ApiResponse<UserResponse> response = ApiResponse.ok(userResource, "Get You Successfully");
     return ResponseEntity.ok(response);
   }
 }

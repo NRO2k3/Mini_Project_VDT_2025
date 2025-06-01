@@ -1,3 +1,5 @@
+import { host } from "../App";
+
 export async function login(email, password, host) {
     const response = await fetch(`https://${host}/api/v1/auth/login`, {
       method: "POST",
@@ -19,10 +21,9 @@ export async function login(email, password, host) {
   return true;
 }
 
-export async function logout(host) {
+export async function logout() {
   const response = await fetch(`https://${host}/api/v1/auth/logout`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
     credentials: "include",
   });
 
@@ -35,8 +36,8 @@ export async function logout(host) {
   return true;
 }
 
-export async function create_user(data, host){
-  const response = await fetch(`https://${host}/api/v1/auth/register`, {
+export async function create_user(data){
+  const response = await fetch(`https://${host}/api/v1/user/create`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
@@ -50,11 +51,40 @@ export async function create_user(data, host){
   return true;
 }
 
-export async function verifyAccessToken(host) {
+export async function update_user(url, data){
+  const response = await fetch(url, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+    credentials:"include"
+  });
+
+  if (response.status !== 200) {
+    const error = await response.json();
+    throw new Error(error.message || "Update User failed");
+  }
+
+  return true;
+}
+
+export async function delete_user(url){
+  const response = await fetch(url, {
+    method: "DELETE",
+    credentials:"include"
+  });
+
+  if (response.status !== 200) {
+    const error = await response.json();
+    throw new Error(error.message || "Delete User failed");
+  }
+
+  return true;
+}
+
+export async function verifyAccessToken() {
   try {
     const response = await fetch(`https://${host}/api/v1/auth/token/verify`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
       credentials: "include",
     });
     return response.status === 200;
@@ -64,11 +94,10 @@ export async function verifyAccessToken(host) {
   }
 }
 
-export async function verifyRefreshToken(host) {
+export async function verifyRefreshToken() {
   try {
     const response = await fetch(`https://${host}/api/v1/auth/token/refresh`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
       credentials: "include",
     });
     return response.status === 200;
@@ -78,6 +107,33 @@ export async function verifyRefreshToken(host) {
   }
 }
 
-export async function verifyAndGetData(host){
+export async function getData(url, setData, navigate ){
+  const isAccessValid = await verifyAccessToken(host);
 
+  if (!isAccessValid) {
+    const isRefreshValid = await verifyRefreshToken(host);
+
+    if (!isRefreshValid) {
+      localStorage.clear();
+      return navigate("/login");
+    }
+  }
+
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      credentials: "include",
+    });
+
+    if (response.status === 200) {
+      const data = await response.json();
+      setData(data.data);
+      return true;
+    } else {
+      setData(null);
+    }
+  } catch (error) {
+    console.error("Fetch error:", error);
+    setData(null);
+  }
 }

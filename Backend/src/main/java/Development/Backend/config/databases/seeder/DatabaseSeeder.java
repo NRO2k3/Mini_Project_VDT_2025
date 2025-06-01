@@ -36,6 +36,10 @@ public class DatabaseSeeder implements CommandLineRunner{
       newRole1.setName("USER");
       roleRepository.save(newRole1);
 
+      Role newRole2 = new Role();
+      newRole2.setName("ASSISTANT");
+      roleRepository.save(newRole2);
+
     }
     if(!userRepository.existsBy()){
       String passwordEncode = passwordEncoder.encode("password123");

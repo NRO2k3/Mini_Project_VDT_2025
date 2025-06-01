@@ -11,28 +11,30 @@ import { logout, verifyAccessToken, verifyRefreshToken } from "../api/auth";
 import { ParamContext } from "../App";
 
 function Topbar ()  {
-	const {host, setIsSignin} = useContext(ParamContext);
+	const {setIsSignin} = useContext(ParamContext);
 	const [hoveredItem, setHoveredItem] = useState(null);
   const [openMenu, setOpenMenu] = useState(null);
 	const [openProducts, setOpenProducts] = useState(null);
+	const [openConfig, setOpenConfig] = useState(null);
 	const navigate = useNavigate();
 	const role = localStorage.getItem("role")
 	const username = localStorage.getItem("username")
+
 	const handleLogout = async ()=>{
-		if(!await verifyAccessToken(host)){
-			if(!await verifyRefreshToken(host)){
+		if(!await verifyAccessToken()){
+			if(!await verifyRefreshToken()){
 				setIsSignin(false);
 				localStorage.clear();
 				return navigate("/login");
 			} else{
-				let check = await logout(host);
+				let check = await logout();
 				if(check){
 					setIsSignin(false);
 					return navigate("/login");
 				}
 			}
 		} else{
-			let check = await logout(host);
+			let check = await logout();
 				if(check){
 					setIsSignin(false);
 					return navigate("/login");
@@ -63,7 +65,7 @@ function Topbar ()  {
 				<Box display="flex"
 					justifyContent="center"
 					alignItems="center"
-					paddingLeft={role === "1" ? "2%" : "10%"}>
+					paddingLeft={role === "ADMIN"||role ==="ASSISTANT" ? "1%" : "10%"}>
 					<Link to="/home">
 						<IconButton
 							onMouseEnter={() => setHoveredItem("home")}
@@ -131,15 +133,17 @@ function Topbar ()  {
 								Insurances
 							</Typography>
 						</MenuItem>
-					</Menu>
+						</Menu>
 				</Box>
-				{	role === "1" ?
+				{	role === "ADMIN" || role === "ASSISTANT" ?
 					<Box display="flex"
 					justifyContent="center"
 					alignItems="center"
 					paddingLeft="5%"
 				>
-					<IconButton  component={Link} to="/configuration"
+					<IconButton
+						aria-control='configurations-menu'
+						onClick={e => setOpenConfig(e.currentTarget)}
 						onMouseEnter={() => setHoveredItem("configuration")}
 						onMouseLeave={() => setHoveredItem(null)}
 					>
@@ -152,7 +156,33 @@ function Topbar ()  {
 							Configuration
 						</Typography>
 					</IconButton>
-
+					<Menu
+						id='configurations-menu'
+						open={Boolean(openConfig)}
+						anchorEl={openConfig}
+						onClose={() => setOpenConfig(null)}
+						disableAutoFocusItem
+						slotProps={{
+							paper: {
+								style: {
+									minWidth: '150px'
+								}
+							}
+						}}
+					>
+						<MenuItem component={Link} to="/configuration/customer">
+							<Typography variant="h6" component='span' pl={2}>
+								Customer
+							</Typography>
+						</MenuItem>
+						{role === "ADMIN"?
+							<MenuItem component={Link} to="/configuration/page">
+							<Typography variant="h6" component='span' pl={2}>
+								Page
+							</Typography>
+						</MenuItem>
+						:null}
+					</Menu>
 					</Box>
 				:null
 				}
