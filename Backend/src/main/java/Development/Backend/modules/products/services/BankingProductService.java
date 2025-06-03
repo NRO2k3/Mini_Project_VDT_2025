@@ -1,5 +1,7 @@
 package Development.Backend.modules.products.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -49,5 +51,11 @@ public class BankingProductService {
   public void deleteBankingProductService(Long id){
     BankingProduct obj = bankingProductRepository.findById(id).orElseThrow(()-> new ErrorException("Product không tồn tại", HttpStatus.BAD_REQUEST));
     bankingProductRepository.delete(obj);
+  }
+
+  public List<BankingProduct> getProductByTypeService(String type){
+    TypeBanking type_obj = typeBankingRepository.findByName(type).orElseThrow(() -> new ErrorException("Type không tồn tại", HttpStatus.BAD_REQUEST));
+    // return userRepository.findByRoleId(role_ob);
+    return type_obj.getBankingProduct();
   }
 }

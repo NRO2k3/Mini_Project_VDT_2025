@@ -23,21 +23,24 @@ function Topbar ()  {
 	const handleLogout = async ()=>{
 		if(!await verifyAccessToken()){
 			if(!await verifyRefreshToken()){
-				setIsSignin(false);
-				localStorage.clear();
-				return navigate("/login");
+				alert("Log out failed !!!")
+				return;
 			} else{
 				let check = await logout();
 				if(check){
 					setIsSignin(false);
-					return navigate("/login");
+					navigate("/login");
+					localStorage.clear();
+					return;
 				}
 			}
 		} else{
 			let check = await logout();
 				if(check){
 					setIsSignin(false);
-					return navigate("/login");
+					navigate("/login");
+					localStorage.clear();
+					return;
 				}
 		}
 	}

@@ -2,20 +2,24 @@ import React from 'react'
 import PermDataSettingIcon from '@mui/icons-material/PermDataSetting';
 import { useContext, useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close';
-import { getData, requestWithAuth, update_object } from '../../api/auth';
+import { getData, requestWithAuth, update_object, update_user } from '../../api/auth';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, MenuItem, TextField, Typography } from '@mui/material';
 import { ParamContext } from '../../App';
 import { useNavigate } from 'react-router-dom';
 
-function SettingInRateDialog({setDataInRate, inRate}) {
+function SettingProductDialog({setDataProduct, product, dataType}) {
   const {host} = useContext(ParamContext);
   const navigate = useNavigate();
-  const url_list = `https://${host}/api/v1/interest_rate/list`;
-  const url_update = `https://${host}/api/v1/interest_rate/update`;
+  const url_list = `https://${host}/api/v1/banking_product/list`;
+  const url_update = `https://${host}/api/v1/banking_product/update`;
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
-    term: inRate.term,
-    rate: inRate.rate
+    id: product.id,
+    name: product.name,
+    description: product.description,
+    minAmount: product.minAmount,
+    maxAmount: product.maxAmount,
+    type: product.type
   });
   
   const handleChange = (e) => {
@@ -25,13 +29,17 @@ function SettingInRateDialog({setDataInRate, inRate}) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     handleClose();
-    const dataRequest= {"term": formData.term,
-                        "rate": formData.rate
+    const dataRequest= {"name": formData.name,
+                        "description": formData.description,
+                        "minAmount":  formData.minAmount,
+                        "maxAmount":  formData.maxAmount,
+                        "type": formData.type,
+                        "id": formData.id
                       }
     let isSuccessfull = await requestWithAuth(navigate, () => update_object(url_update, dataRequest));
     if(isSuccessfull === true){
-      getData(url_list, setDataInRate, navigate);
-      alert("Update InterestRate Successfully");
+      getData(url_list, setDataProduct, navigate);
+      alert("Update Product Successfully");
     }
   };
   const handleClose = () => {
@@ -74,39 +82,82 @@ function SettingInRateDialog({setDataInRate, inRate}) {
             justifyContent="space-between"
             alignItems="center"
         >
-          <Typography variant="h5">Update Interest Rate!</Typography>
+          <Typography variant="h5">Update Product Profile!</Typography>
           <Button onClick={handleClose}><CloseIcon/></Button>
         </Box>
       </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
           <TextField
-            type="number"
-            name="term"
-            label="Term"
-            fullWidth
-            margin="dense"
-            variant="outlined"
-            disabled
-            value={formData.term}
-          />
-          <TextField
-            name="rate"
-            label="Rate Percent"
+            type="text"
+            name="name"
+            label="Product Name"
             fullWidth
             margin="dense"
             variant="outlined"
             onChange={handleChange}
-            value={formData.rate}
+            value={formData.name}
+          />
+          <TextField
+            type="text"
+            name="description"
+            label="Description"
+            fullWidth
+            margin="dense"
+            variant="outlined"
+            onChange={handleChange}
+            value={formData.description}
+          />
+          <TextField
+            name="minAmount"
+            label="Min Amount"
+            fullWidth
+            margin="dense"
+            variant="outlined"
+            onChange={handleChange}
+            value={formData.minAmount}
             type="number"
             slotProps={{
-              input: {
-                step: '0.01',
-                min: '0',
-                max: '99.99'
+              input:{
+                step: "0.01",
+                min: "0",
+                max: "9999999999999999.99"
               }
             }}
           />
+          <TextField
+            name="maxAmount"
+            label="Max Amount"
+            fullWidth
+            margin="dense"
+            variant="outlined"
+            onChange={handleChange}
+            value={formData.maxAmount}
+            type="number"
+            slotProps={{
+              input:{
+                step: "0.01",
+                min: "0",
+                max: "9999999999999999.99"
+              }
+            }}
+          />
+          <TextField
+            select
+            name="type"
+            label="Type"
+            fullWidth
+            margin="dense"
+            variant="outlined"
+            onChange={handleChange}
+            value={formData.type}
+          >
+            {dataType.map((option)=>(
+              <MenuItem key={option.id} value={option.name}>
+                  {option.name}
+              </MenuItem>
+            ))}
+          </TextField>
         </DialogContentText>
       </DialogContent>
       <DialogActions>
@@ -119,4 +170,4 @@ function SettingInRateDialog({setDataInRate, inRate}) {
   )
 }
 
-export default SettingInRateDialog
+export default SettingProductDialog

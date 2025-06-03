@@ -16,6 +16,8 @@ import { useNavigate } from "react-router-dom";
 function Login() {
     const { setIsSignin, host} = useContext(ParamContext);
     const navigate = useNavigate();
+    console.log("Login component rendered");
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);

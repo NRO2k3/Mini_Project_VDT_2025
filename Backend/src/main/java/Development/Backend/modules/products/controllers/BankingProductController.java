@@ -83,4 +83,19 @@ public class BankingProductController {
     ApiResponse<?> response = ApiResponse.ok(null, "Delete BankingProduct Successfully");
     return ResponseEntity.ok(response);
   }
+
+  @GetMapping("list/product")
+  public ResponseEntity<ApiResponse<List<BankingProductResponse>>> getProductByType(@RequestParam String type){
+    List<BankingProductResponse> products = (bankingProductService.getProductByTypeService(type)).stream().map(product -> BankingProductResponse.builder()
+    .id(product.getId())
+    .name(product.getName())
+    .description(product.getDescription())
+    .minAmount(product.getMinAmount())
+    .maxAmount(product.getMaxAmount())
+    .type(product.getTypeId().getName())
+    .build()
+    ).collect(Collectors.toList());
+    ApiResponse<List<BankingProductResponse>> response = ApiResponse.ok(products, "Get BankingProduct Successfully");
+    return ResponseEntity.ok(response);
+  }
 }

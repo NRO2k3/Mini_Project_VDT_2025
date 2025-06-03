@@ -47,13 +47,11 @@ function TableUsers() {
 
   return (
     <>
-    {
-      dataUser.length === 0 ? <Typography variant='h4' fontWeight={'bold'}>Loading ...</Typography>:
-      <TableContainer component={Paper} sx={{ maxWidth: "100%", overflowX: "auto", backgroundColor: "white",  maxHeight: "560px", overflowY: "auto", marginTop: "12px"}}>
+      <TableContainer component={Paper} sx={{ backgroundColor: "white",  height: "560px" , width: "1200px", marginTop: "40px", border: '1px solid #ccc', overflowX: "auto", overflowY: "auto"}}>
       <Box sx={{ textAlign: "center", p: 2,}}>
         <Typography variant='h5' fontWeight={'bold'}>User Profile</Typography>
       </Box>
-      <Table size="small">
+      <Table size="small" sx={{ tableLayout: 'fixed', width: '100%' }}>
         <TableHead>
           <TableRow>
             <TableCell align="center" sx={{fontWeight: "600", fontSize: "15px", position: "sticky", top: 0, zIndex: 1, backgroundColor: "white"}}>Id</TableCell>
@@ -118,62 +116,61 @@ function TableUsers() {
           )}
         </TableBody>
       </Table>
-    </TableContainer>
-    }
-    <ConfirmDialog
-      open={userIdToDelete !== null}
-      onClose = {() => setUserIdToDelete(null)}
-      option={"delete"}
-      onConfirm={() => handleDelete(userIdToDelete)}
-    />
-    <Menu
-      id='filter-menu'
-      open={Boolean(openFilter)}
-      anchorEl={openFilter}
-      onClose={() => setOpenFilter(null)}
-      disableAutoFocusItem
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'left',
-      }}
-      slotProps={{
-        paper: {
-          style: {
-            minWidth: '80px',
-            marginLeft: '10px',
+      </TableContainer>
+      <ConfirmDialog
+        open={userIdToDelete !== null}
+        onClose = {() => setUserIdToDelete(null)}
+        option={"delete"}
+        onConfirm={() => handleDelete(userIdToDelete)}
+      />
+      <Menu
+        id='filter-menu'
+        open={Boolean(openFilter)}
+        anchorEl={openFilter}
+        onClose={() => setOpenFilter(null)}
+        disableAutoFocusItem
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+        slotProps={{
+          paper: {
+            style: {
+              minWidth: '80px',
+              marginLeft: '10px',
+            }
           }
-        }
-      }}
-    >
-      <MenuItem onClick={() => handleSelect('ALL')}>
-        <Typography variant="subtitle1">
-          ALL
-        </Typography>
-      </MenuItem>
+        }}
+      >
+        <MenuItem onClick={() => handleSelect('ALL')}>
+          <Typography variant="subtitle1">
+            ALL
+          </Typography>
+        </MenuItem>
 
-      <MenuItem onClick={() => handleSelect('ADMIN')}>
-        <Typography variant="subtitle1">
-          ADMIN
-        </Typography>
-      </MenuItem>
+        <MenuItem onClick={() => handleSelect('ADMIN')}>
+          <Typography variant="subtitle1">
+            ADMIN
+          </Typography>
+        </MenuItem>
 
-      <MenuItem onClick={() => handleSelect('USER')}>
-        <Typography variant="subtitle1">
-          USER
-        </Typography>
-      </MenuItem>
+        <MenuItem onClick={() => handleSelect('USER')}>
+          <Typography variant="subtitle1">
+            USER
+          </Typography>
+        </MenuItem>
 
-      <MenuItem onClick={() => handleSelect('ASSISTANT')}>
-        <Typography variant="subtitle1">
-          ASSISTANT
-        </Typography>
-      </MenuItem>
-    </Menu>
-    </>
+        <MenuItem onClick={() => handleSelect('ASSISTANT')}>
+          <Typography variant="subtitle1">
+            ASSISTANT
+          </Typography>
+        </MenuItem>
+      </Menu>
+      </>
   )
 }
 

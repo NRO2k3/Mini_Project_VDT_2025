@@ -88,6 +88,7 @@ function CreateInRateDialog({setDataInRate}) {
               variant="outlined"
               onChange={handleChange}
               value={formData.term}
+              type="number"
             />
             <TextField
               name="rate"
@@ -98,9 +99,12 @@ function CreateInRateDialog({setDataInRate}) {
               onChange={handleChange}
               value={formData.rate}
               type="number"
-              inputProps={{
-                step: "0.01",
-                min: 0
+              slotProps={{
+                input: {
+                  step: '0.01',
+                  min: '0',
+                  max: '99.99'
+                }
               }}
             />
           </DialogContentText>

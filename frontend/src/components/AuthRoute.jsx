@@ -10,10 +10,6 @@ function AuthRoute({ children, authRequired }) {
   }
 
   if (!authRequired && isSignIn) {
-    return <Navigate to="/login" replace />;
-  }
-
-  if (!authRequired && isSignIn) {
     return <Navigate to="/" replace />;
   }
 

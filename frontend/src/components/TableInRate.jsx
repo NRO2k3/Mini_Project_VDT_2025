@@ -29,14 +29,11 @@ function TableInRate() {
   },[])
   return (
     <>
-    {
-      dataInRate.length === 0 ?
-      <Typography variant='h4' fontWeight={'bold'}>Loading ...</Typography>:
-      <TableContainer component={Paper} sx={{ maxWidth: "100%", overflowX: "auto", backgroundColor: "white",  maxHeight: "560px", overflowY: "auto", marginTop: "12px"}}>
+      <TableContainer component={Paper} sx={{ backgroundColor: "white",  height: "560px", marginTop: "40px", border: '1px solid #ccc', width: "600px", overflowX: "auto", overflowY: "auto"}}>
       <Box sx={{ textAlign: "center", p: 2,}}>
         <Typography variant='h5' fontWeight={'bold'}>Interest Rate</Typography>
       </Box>
-      <Table size="small">
+      <Table size="small" sx={{ tableLayout: 'fixed', width: '100%' }}>
         <TableHead>
           <TableRow>
             <TableCell align="center" sx={{fontWeight: "600", fontSize: "15px", position: "sticky", top: 0, zIndex: 1, backgroundColor: "white"}}>Id</TableCell>
@@ -79,7 +76,6 @@ function TableInRate() {
         </TableBody>
       </Table>
     </TableContainer>
-    }
     <ConfirmDialog
       open={inRateIdToDelete !== null}
       onClose = {() => setInRateIdToDelete(null)}

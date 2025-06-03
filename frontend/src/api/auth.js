@@ -1,4 +1,4 @@
-import { host } from "../App";
+import { host, ParamContext } from "../App";
 
 export async function login(email, password, host) {
     const response = await fetch(`https://${host}/api/v1/auth/login`, {
@@ -130,8 +130,9 @@ export async function getData(url, setData, navigate ){
     const isRefreshValid = await verifyRefreshToken(host);
 
     if (!isRefreshValid) {
+      navigate("/login");
       localStorage.clear();
-      return navigate("/login");
+      return;
     }
   }
 
@@ -159,8 +160,9 @@ export async function requestWithAuth(navigate, apiCall) {
   if (!isAccessValid) {
     const isRefreshValid = await verifyRefreshToken(host);
     if (!isRefreshValid) {
+      navigate("/login");
       localStorage.clear();
-      return navigate("/login");
+      return;
     }
   }
 
