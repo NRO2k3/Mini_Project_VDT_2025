@@ -1,4 +1,4 @@
-package Development.Backend.modules.users.entities;
+package Development.Backend.modules.products.entities;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,6 +13,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -20,13 +21,15 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "roles")
-public class Role {
-  
+@Builder
+@Table(name = "products_type")
+public class TypeBanking {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @Column(nullable = false)
   private String name;
 
   @Column(name = "created_at")
@@ -40,11 +43,12 @@ public class Role {
     createdAt = LocalDateTime.now();
     updatedAt = LocalDateTime.now();
   }
+
   @PreUpdate
   protected void onUpdate(){
     updatedAt = LocalDateTime.now();
   }
 
-  @OneToMany(mappedBy = "roleId")
-  private List<User> users;
+  @OneToMany(mappedBy = "typeId")
+  private List<BankingProduct> bankingProduct;
 }

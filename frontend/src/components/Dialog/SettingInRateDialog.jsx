@@ -2,22 +2,20 @@ import React from 'react'
 import PermDataSettingIcon from '@mui/icons-material/PermDataSetting';
 import { useContext, useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close';
-import { getData, requestWithAuth, update_object, update_user } from '../../api/auth';
+import { getData, requestWithAuth, update_object } from '../../api/auth';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, MenuItem, TextField, Typography } from '@mui/material';
 import { ParamContext } from '../../App';
 import { useNavigate } from 'react-router-dom';
 
-function SettingUserDialog({setDataUser, user}) {
+function SettingInRateDialog({setDataInRate, inRate}) {
   const {host} = useContext(ParamContext);
   const navigate = useNavigate();
-  const url_list = `https://${host}/api/v1/user/list`;
-  const url_update = `https://${host}/api/v1/user/update`;
+  const url_list = `https://${host}/api/v1/interest_rate/list`;
+  const url_update = `https://${host}/api/v1/interest_rate/update`;
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
-    name: user.name,
-    email: user.email,
-    phone: user.phone,
-    role: user.role
+    term: inRate.term,
+    rate: inRate.rate
   });
   
   const handleChange = (e) => {
@@ -27,15 +25,13 @@ function SettingUserDialog({setDataUser, user}) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     handleClose();
-    const dataRequest= {"name": formData.name,
-                        "phone": formData.phone,
-                        "email":  formData.email,
-                        "role":  formData.role
+    const dataRequest= {"term": formData.term,
+                        "rate": formData.rate
                       }
     let isSuccessfull = await requestWithAuth(navigate, () => update_object(url_update, dataRequest));
     if(isSuccessfull === true){
-      getData(url_list, setDataUser, navigate);
-      alert("Update User Successfully");
+      getData(url_list, setDataInRate, navigate);
+      alert("Update InterestRate Successfully");
     }
   };
   const handleClose = () => {
@@ -78,54 +74,30 @@ function SettingUserDialog({setDataUser, user}) {
             justifyContent="space-between"
             alignItems="center"
         >
-          <Typography variant="h5">Update User Profile!</Typography>
+          <Typography variant="h5">Update Interest Rate!</Typography>
           <Button onClick={handleClose}><CloseIcon/></Button>
         </Box>
       </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
           <TextField
-            name="name"
-            label="Username"
-            fullWidth
-            margin="dense"
-            variant="outlined"
-            onChange={handleChange}
-            value={formData.name}
-            autoComplete="off"
-          />
-          <TextField
-            name="email"
-            label="Email Address"
+            name="term"
+            label="Term"
             fullWidth
             margin="dense"
             variant="outlined"
             disabled
-            value={formData.email}
+            value={formData.term}
           />
           <TextField
-            name="phone"
-            label="Phone Number"
+            name="rate"
+            label="Rate Percent"
             fullWidth
             margin="dense"
             variant="outlined"
             onChange={handleChange}
-            value={formData.phone}
+            value={formData.rate}
           />
-          <TextField
-            select
-            name="role"
-            label="Role"
-            fullWidth
-            margin="dense"
-            variant="outlined"
-            onChange={handleChange}
-            value={formData.role}
-          >
-            <MenuItem value="ADMIN">Admin</MenuItem>
-            <MenuItem value="USER">User</MenuItem>
-            <MenuItem value="ASSISTANT">Assistant</MenuItem>
-          </TextField>
         </DialogContentText>
       </DialogContent>
       <DialogActions>
@@ -138,4 +110,4 @@ function SettingUserDialog({setDataUser, user}) {
   )
 }
 
-export default SettingUserDialog
+export default SettingInRateDialog

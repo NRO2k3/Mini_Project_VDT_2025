@@ -51,7 +51,23 @@ export async function create_user(data){
   return true;
 }
 
-export async function update_user(url, data){
+export async function create_object(url, data){
+  const response = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials:"include",
+    body: JSON.stringify(data),
+  });
+
+  if (response.status !== 200) {
+    const error = await response.json();
+    throw new Error(error.message || "Signup failed");
+  }
+
+  return true;
+}
+
+export async function update_object(url, data){
   const response = await fetch(url, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
@@ -61,13 +77,13 @@ export async function update_user(url, data){
 
   if (response.status !== 200) {
     const error = await response.json();
-    throw new Error(error.message || "Update User failed");
+    throw new Error(error.message || "Update failed");
   }
 
   return true;
 }
 
-export async function delete_user(url){
+export async function delete_object(url){
   const response = await fetch(url, {
     method: "DELETE",
     credentials:"include"
@@ -75,7 +91,7 @@ export async function delete_user(url){
 
   if (response.status !== 200) {
     const error = await response.json();
-    throw new Error(error.message || "Delete User failed");
+    throw new Error(error.message || "Delete failed");
   }
 
   return true;
@@ -135,5 +151,23 @@ export async function getData(url, setData, navigate ){
   } catch (error) {
     console.error("Fetch error:", error);
     setData(null);
+  }
+}
+
+export async function requestWithAuth(navigate, apiCall) {
+  const isAccessValid = await verifyAccessToken(host);
+  if (!isAccessValid) {
+    const isRefreshValid = await verifyRefreshToken(host);
+    if (!isRefreshValid) {
+      localStorage.clear();
+      return navigate("/login");
+    }
+  }
+
+  try {
+    return await apiCall();
+  } catch (err) {
+    console.error("API Error:", err.message);
+    throw err;
   }
 }

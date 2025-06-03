@@ -1,10 +1,14 @@
 package Development.Backend.config.databases.seeder;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import Development.Backend.modules.products.entities.TypeBanking;
+import Development.Backend.modules.products.repositories.TypeBankingRepository;
 import Development.Backend.modules.users.entities.Role;
 import Development.Backend.modules.users.entities.User;
 import Development.Backend.modules.users.repositories.RoleRepository;
@@ -22,6 +26,9 @@ public class DatabaseSeeder implements CommandLineRunner{
 
   @Autowired
   private RoleRepository roleRepository;
+
+  @Autowired
+  private TypeBankingRepository typeBankingRepository;
 
   @Override
   @Transactional
@@ -41,6 +48,17 @@ public class DatabaseSeeder implements CommandLineRunner{
       roleRepository.save(newRole2);
 
     }
+
+    if(!typeBankingRepository.existsBy()){
+      typeBankingRepository.saveAll(List.of(
+        TypeBanking.builder().name("SAVING").build(),
+        TypeBanking.builder().name("LOAN").build(),
+        TypeBanking.builder().name("INSURANCE").build(),
+        TypeBanking.builder().name("CARD").build(),
+        TypeBanking.builder().name("INVEST").build()
+    ));
+    }
+
     if(!userRepository.existsBy()){
       String passwordEncode = passwordEncoder.encode("password123");
 

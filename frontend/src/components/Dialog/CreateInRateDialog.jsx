@@ -1,22 +1,20 @@
 import React, { useContext, useState } from 'react'
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
-import { create_user, getData } from '../../api/auth';
+import { create_object, getData, requestWithAuth } from '../../api/auth';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Typography } from '@mui/material';
 import { ParamContext } from '../../App';
 import { useNavigate } from 'react-router-dom';
 
-function CreateUserDialog({setDataUser}) {
+function CreateInRateDialog({setDataInRate}) {
   const {host} = useContext(ParamContext);
   const navigate = useNavigate();
-  const url = `https://${host}/api/v1/user/list`;
+  const url_list = `https://${host}/api/v1/interest_rate/list`;
+  const url_create = `https://${host}/api/v1/interest_rate/create`;
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    password:"",
-    password_verify:""
+    term: "",
+    rate: "",
   });
   
   const handleChange = (e) => {
@@ -26,25 +24,19 @@ function CreateUserDialog({setDataUser}) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     handleClose();
-    if(formData.password !== formData.password_verify){
-      alert("Password not equal Password Verify !!!");
-      return;
-    } else {
-        const dataRequest= {"name": formData.name,
-                            "password": formData.password,
-                            "email":  formData.email,
-                            "phone":  formData.phone
-                          }
-        let isSuccessfull = await create_user(dataRequest);
-        if(isSuccessfull === true){
-          getData(url, setDataUser, navigate);
-          alert("Create User Successfully");
-        }
+    const dataRequest= {"term": formData.term,
+                        "rate": formData.rate}
+    let isSuccessfull = await requestWithAuth(navigate, () => create_object(url_create, dataRequest));
+    if(isSuccessfull === true){
+      getData(url_list, setDataInRate, navigate);
+      alert("Create Interest Rate Successfully");
     }
   };
+
   const handleClose = () => {
     setOpen(false);
   };
+
   const handleOPen = () => {
     setOpen(true);
   };
@@ -82,60 +74,34 @@ function CreateUserDialog({setDataUser}) {
               justifyContent="space-between"
               alignItems="center"
           >
-            <Typography variant="h5">Setting User Profile!</Typography>
+            <Typography variant="h5">Setting Interest Rate</Typography>
             <Button onClick={handleClose}><CloseIcon/></Button>
           </Box>
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             <TextField
-              name="name"
-              label="Username"
+              name="term"
+              label="Term"
               fullWidth
               margin="dense"
               variant="outlined"
               onChange={handleChange}
-              value={formData.name}
-              autoComplete="off"
+              value={formData.term}
             />
             <TextField
-              name="email"
-              label="Email Address"
+              name="rate"
+              label="Rate Percent"
               fullWidth
               margin="dense"
               variant="outlined"
               onChange={handleChange}
-              value={formData.email}
-            />
-            <TextField
-              name="phone"
-              label="Phone Number"
-              fullWidth
-              margin="dense"
-              variant="outlined"
-              onChange={handleChange}
-              value={formData.phone}
-            />
-            <TextField
-              name="password"
-              label="Password"
-              type="password"
-              fullWidth
-              margin="dense"
-              variant="outlined"
-              onChange={handleChange}
-              value={formData.password}
-              autoComplete="new-password"
-            />
-            <TextField
-              name="password_verify"
-              label="Verrify Password"
-              type="password"
-              fullWidth
-              margin="dense"
-              variant="outlined"
-              onChange={handleChange}
-              value={formData.password_verify}
+              value={formData.rate}
+              type="number"
+              inputProps={{
+                step: "0.01",
+                min: 0
+              }}
             />
           </DialogContentText>
         </DialogContent>
@@ -148,4 +114,5 @@ function CreateUserDialog({setDataUser}) {
     </>
   )
 }
-export default CreateUserDialog
+
+export default CreateInRateDialog

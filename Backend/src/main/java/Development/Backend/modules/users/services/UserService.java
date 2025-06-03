@@ -96,6 +96,7 @@ public class UserService{
 
   public List<User> getUserByRoleService(String role){
     Role role_ob = roleRepository.findByName(role).orElseThrow(() -> new ErrorException("Role không tồn tại", HttpStatus.BAD_REQUEST));
-    return userRepository.findByRoleId(role_ob);
+    // return userRepository.findByRoleId(role_ob);
+    return role_ob.getUsers();
   }
 }

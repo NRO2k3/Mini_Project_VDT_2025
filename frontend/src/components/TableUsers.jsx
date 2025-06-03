@@ -1,6 +1,6 @@
 import { Box, Button, Menu, MenuItem, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import React, { useContext, useEffect, useState } from 'react'
-import { delete_user, getData } from '../api/auth';
+import { delete_object, delete_user, getData, requestWithAuth } from '../api/auth';
 import {useNavigate } from "react-router-dom";
 import { ParamContext } from '../App';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -20,7 +20,7 @@ function TableUsers() {
   const handleDelete= async(id)=>{
     setUserIdToDelete(null)
     const url_delete= `https://${host}/api/v1/user/delete?id=${id}`
-    let isSuccessfull = await delete_user(url_delete);
+    let isSuccessfull = await requestWithAuth(navigate, () => delete_object(url_delete));
     if(isSuccessfull === true){
       getData(url_list, setDataUser, navigate);
       alert("Delete User Successfully");
@@ -31,6 +31,7 @@ function TableUsers() {
     console.log('Selected:', role);
     if (role === "ALL"){
       await getData(url_list, setDataUser, navigate);
+      setOpenFilter(null);
       return;
     } else{
       const url_filter= `https://${host}/api/v1/user/list/role?role=${role}`
@@ -48,23 +49,23 @@ function TableUsers() {
     <>
     {
       dataUser.length === 0 ? <Typography variant='h4' fontWeight={'bold'}>Loading ...</Typography>:
-      <TableContainer component={Paper} sx={{ maxWidth: "100%", overflowX: "auto", backgroundColor: "white",  maxHeight: "600px", overflowY: "auto", marginTop: "12px"}}>
+      <TableContainer component={Paper} sx={{ maxWidth: "100%", overflowX: "auto", backgroundColor: "white",  maxHeight: "560px", overflowY: "auto", marginTop: "12px"}}>
       <Box sx={{ textAlign: "center", p: 2,}}>
         <Typography variant='h5' fontWeight={'bold'}>User Profile</Typography>
       </Box>
       <Table size="small">
         <TableHead>
           <TableRow>
-            <TableCell align="center" sx={{"fontWeight": "600", "fontSize": "15px"}}>Id</TableCell>
-            <TableCell align="center" sx={{"fontWeight": "600", "fontSize": "15px"}}>Username</TableCell>
-            <TableCell align="center" sx={{"fontWeight": "600", "fontSize": "15px"}}>Email</TableCell>
-            <TableCell align="center" sx={{"fontWeight": "600", "fontSize": "15px"}}>Phone</TableCell>
-            <TableCell align="center" sx={{"fontWeight": "600", "fontSize": "15px"}}>Role</TableCell>
-            <TableCell align="center" sx={{"fontWeight": "600", "fontSize": "15px"}}
+            <TableCell align="center" sx={{fontWeight: "600", fontSize: "15px", position: "sticky", top: 0, zIndex: 1, backgroundColor: "white"}}>Id</TableCell>
+            <TableCell align="center" sx={{fontWeight: "600", fontSize: "15px", position: "sticky", top: 0, zIndex: 1, backgroundColor: "white"}}>Username</TableCell>
+            <TableCell align="center" sx={{fontWeight: "600", fontSize: "15px", position: "sticky", top: 0, zIndex: 1, backgroundColor: "white"}}>Email</TableCell>
+            <TableCell align="center" sx={{fontWeight: "600", fontSize: "15px", position: "sticky", top: 0, zIndex: 1, backgroundColor: "white"}}>Phone</TableCell>
+            <TableCell align="center" sx={{fontWeight: "600", fontSize: "15px", position: "sticky", top: 0, zIndex: 1, backgroundColor: "white"}}>Role</TableCell>
+            <TableCell align="center" sx={{fontWeight: "600", fontSize: "15px", position: "sticky", top: 0, zIndex: 1, backgroundColor: "white"}}
             >
               <CreateUserDialog setDataUser={setDataUser}/>
             </TableCell>
-            <TableCell align="center" sx={{"fontWeight": "600", "fontSize": "15px"}}
+            <TableCell align="center" sx={{fontWeight: "600", fontSize: "15px", position: "sticky", top: 0, zIndex: 1, backgroundColor: "white"}}
             >
               <Button
                   startIcon={<FilterAltIcon/>}
@@ -88,15 +89,15 @@ function TableUsers() {
         <TableBody>
         {dataUser.map((user, index) =>
             <TableRow key={user.id}>
-              <TableCell align="center" sx={{"fontWeight": "400", "fontSize": "13px"}}>{index+1}</TableCell>
-              <TableCell align="center" sx={{"fontWeight": "400", "fontSize": "13px"}}>{user.name}</TableCell>
-              <TableCell align="center" sx={{"fontWeight": "400", "fontSize": "13px"}}>{user.email}</TableCell>
-              <TableCell align="center" sx={{"fontWeight": "400", "fontSize": "13px"}}>{user.phone}</TableCell>
-              <TableCell align="center" sx={{"fontWeight": "400", "fontSize": "13px"}}>{user.role}</TableCell>
-              <TableCell align="center" sx={{"fontWeight": "400", "fontSize": "13px"}}>
+              <TableCell align="center" sx={{fontWeight: "400", fontSize: "13px"}}>{index+1}</TableCell>
+              <TableCell align="center" sx={{fontWeight: "400", fontSize: "13px"}}>{user.name}</TableCell>
+              <TableCell align="center" sx={{fontWeight: "400", fontSize: "13px"}}>{user.email}</TableCell>
+              <TableCell align="center" sx={{fontWeight: "400", fontSize: "13px"}}>{user.phone}</TableCell>
+              <TableCell align="center" sx={{fontWeight: "400", fontSize: "13px"}}>{user.role}</TableCell>
+              <TableCell align="center" sx={{fontWeight: "400", fontSize: "13px"}}>
                 <SettingUserDialog setDataUser={setDataUser} user={user}/>
               </TableCell>
-              <TableCell align="center" sx={{"fontWeight": "400", "fontSize": "13px"}}>
+              <TableCell align="center" sx={{fontWeight: "400", fontSize: "13px"}}>
               <Button
                 startIcon={<DeleteIcon />}
                 sx={{
@@ -121,7 +122,7 @@ function TableUsers() {
     }
     <ConfirmDialog
       open={userIdToDelete !== null}
-      setUserIdToDelete = {() => setUserIdToDelete(null)}
+      onClose = {() => setUserIdToDelete(null)}
       option={"delete"}
       onConfirm={() => handleDelete(userIdToDelete)}
     />
