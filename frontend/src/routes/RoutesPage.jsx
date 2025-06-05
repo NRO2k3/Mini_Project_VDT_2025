@@ -4,10 +4,12 @@ import Home from '../pages/Home';
 import Login from '../pages/Login';
 import Signup from '../pages/Signup';
 import AuthRoute from '../components/AuthRoute';
-import DashboardSaving from '../pages/DashboardSaving';
-import Savings from '../pages/Savings';
+import DashboardSaving from '../pages/DashboardProduct';
+import Savings from '../pages/LandingProduct';
 import Page from '../pages/configuration/Page';
 import Customer from '../pages/configuration/Customer';
+import LandingProduct from '../pages/LandingProduct';
+import DashboardProduct from '../pages/DashboardProduct';
 
 function RoutesPage() {
   return (
@@ -47,18 +49,18 @@ function RoutesPage() {
       />
 
       <Route
-        path="/saving"
+        path="/product/landing"
         element={
           <AuthRoute authRequired={true}>
-            <Savings/>
+            <LandingProduct/>
           </AuthRoute>
         }
       />
       <Route
-        path="/saving/dashboard"
+        path="/product/dashboard"
         element={
           <AuthRoute authRequired={true}>
-            <DashboardSaving/>
+            <DashboardProduct/>
           </AuthRoute>
         }
       />

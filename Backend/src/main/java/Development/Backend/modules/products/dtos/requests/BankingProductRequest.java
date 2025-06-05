@@ -17,11 +17,11 @@ public class BankingProductRequest {
   @NotNull(message="Description không được để trống")
   private String description;
 
-  @Digits(integer=16, fraction=2, message="Rate phải có tối đa 16 chữ số phần nguyên và 2 chữ số phần thập phân")
+  @Digits(integer=16, fraction=2, message="minAmount phải có tối đa 16 chữ số phần nguyên và 2 chữ số phần thập phân")
   @NotNull(message="minAmount không được để trống")
   private BigDecimal minAmount;
 
-  @Digits(integer=16, fraction=2, message="Rate phải có tối đa 16 chữ số phần nguyên và 2 chữ số phần thập phân")
+  @Digits(integer=16, fraction=2, message="maxAmount phải có tối đa 16 chữ số phần nguyên và 2 chữ số phần thập phân")
   @NotNull(message="maxAmount không được để trống")
   private BigDecimal maxAmount;
 

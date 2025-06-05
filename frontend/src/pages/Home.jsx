@@ -31,8 +31,8 @@ function Home() {
   return (
     <>
       <Topbar />
-      <Box display="flex" justifyContent="center" mt={2}>
-        <Card sx={{ maxWidth: "100%" }}>
+      <Box display="flex" justifyContent="center" sx={{ maxWidth: "1536px", mx: "auto" }}>
+        <Card sx={{ width: "100%" }}>
           <CardMedia
             component="img"
             height="600"
@@ -41,8 +41,10 @@ function Home() {
           />
         </Card>
       </Box>
+
       <Box display="flex" justifyContent="center" mt={1}>
-        <Box p={4} maxWidth="800px" mx="auto" border={"1px solid black"} mr={1} borderRadius={'20px'}>
+        <Box p={4} maxWidth="800px" mx="auto" border={"1px solid black"} m={1} borderRadius={'20px'}>
+
           <Box display="flex" justifyContent="center">
             <Typography variant='h4'
             fontWeight={'bold'}
@@ -57,7 +59,7 @@ function Home() {
           Các ngành nghề chính của tập đoàn bao gồm: ngành dịch vụ viễn thông & công nghệ thông tin; ngành nghiên cứu sản xuất thiết bị điện tử viễn thông, ngành công nghiệp quốc phòng, ngành công nghiệp an ninh mạng và ngành cung cấp dịch vụ số. Sản phẩm nổi bật nhất của Viettel hiện nay là mạng di động Viettel Mobile. Công ty thành viên Viettel Telecom của Viettel hiện đang là nhà mạng giữ thị phần lớn nhất trên thị trường dịch vụ viễn thông Việt Nam. Bên cạnh lĩnh vực viễn thông nổi tiếng, Viettel đang trở thành một nhà thầu quốc phòng quan trọng của Việt Nam với sự tham gia của các công ty con đáng chú ý như Viettel High Tech và Viện Hàng không Vũ trụ Viettel trong việc phát triển, sản xuất và cung cấp cho Quân đội Nhân dân Việt Nam nhiều sản phẩm và vũ khí nội địa như thiết bị liên lạc quân sự, máy bay không người lái, radar giám sát và tên lửa chống hạm.
         </Typography>
         </Box>
-        <Box p={4} maxWidth="1000px" mx="auto" border={"1px solid black"} mr={1} borderRadius={'20px'}>
+        <Box p={4} maxWidth="1000px" mx="auto" border={"1px solid black"} m={1} borderRadius={'20px'}>
         <Box display="flex" justifyContent="center">
           <Typography variant='h4'
             fontWeight={'bold'}

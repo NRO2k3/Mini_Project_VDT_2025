@@ -91,7 +91,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         userId = jwtService.extractUserId(jwt);
-        log.info("userId {}", userId);
         if(userId != null && SecurityContextHolder.getContext().getAuthentication() == null){
           UserDetails userDetails = customUserDetailsService.loadUserByUsername(userId);
           String emailFromToken = jwtService.extractEmail(jwt);

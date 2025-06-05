@@ -1,5 +1,5 @@
 import { Box, IconButton, Typography, Menu, MenuItem } from "@mui/material";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import { Link, useNavigate } from "react-router-dom";
@@ -7,11 +7,11 @@ import HomeIcon from '@mui/icons-material/Home';
 import SettingsIcon from '@mui/icons-material/Settings';
 import logo from '../assets/logo_lab.png';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { logout, verifyAccessToken, verifyRefreshToken } from "../api/auth";
+import { getData, logout, verifyAccessToken, verifyRefreshToken } from "../api/auth";
 import { ParamContext } from "../App";
 
 function Topbar ()  {
-	const {setIsSignin} = useContext(ParamContext);
+	const {setIsSignin, host} = useContext(ParamContext);
 	const [hoveredItem, setHoveredItem] = useState(null);
   const [openMenu, setOpenMenu] = useState(null);
 	const [openProducts, setOpenProducts] = useState(null);
@@ -19,6 +19,8 @@ function Topbar ()  {
 	const navigate = useNavigate();
 	const role = localStorage.getItem("role")
 	const username = localStorage.getItem("username")
+  const [dataType, setDataType] = useState([]);
+	const url_list_type = `https://${host}/api/v1/banking_product/list/type`;
 
 	const handleLogout = async ()=>{
 		if(!await verifyAccessToken()){
@@ -44,6 +46,10 @@ function Topbar ()  {
 				}
 		}
 	}
+
+	useEffect(()=>{
+		getData(url_list_type, setDataType, navigate);
+	},[])
   return (
     <Box display="flex"
 				justifyContent="space-between"
@@ -119,24 +125,16 @@ function Topbar ()  {
 							}
 						}}
 					>
-						<MenuItem  component={Link} to="/saving">
+					{
+						dataType.map((type) => (
+						<MenuItem key={type.id} component={Link}  to={"/product/landing"} state={{typeName:type.name}}>
 							<Typography variant="h6" component='span' pl={2}>
-								Savings
+								{type.name}
 							</Typography>
 						</MenuItem>
-			
-						<MenuItem>
-							<Typography variant="h6" component='span' pl={2}>
-								Loans
-							</Typography>
-						</MenuItem>
-
-						<MenuItem>
-							<Typography variant="h6" component='span' pl={2}>
-								Insurances
-							</Typography>
-						</MenuItem>
-						</Menu>
+						))
+					}
+					</Menu>
 				</Box>
 				{	role === "ADMIN" || role === "ASSISTANT" ?
 					<Box display="flex"

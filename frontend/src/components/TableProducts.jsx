@@ -163,7 +163,7 @@ function TableProducts() {
           paper: {
             style: {
               minWidth: '80px',
-              marginLeft: '10px',
+              marginLeft: '14px',
             }
           }
         }}
