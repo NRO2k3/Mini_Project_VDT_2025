@@ -4,10 +4,7 @@ import Home from '../pages/Home';
 import Login from '../pages/Login';
 import Signup from '../pages/Signup';
 import AuthRoute from '../components/AuthRoute';
-import DashboardSaving from '../pages/DashboardProduct';
-import Savings from '../pages/LandingProduct';
 import Page from '../pages/configuration/Page';
-import Customer from '../pages/configuration/Customer';
 import LandingProduct from '../pages/LandingProduct';
 import DashboardProduct from '../pages/DashboardProduct';
 
@@ -69,14 +66,6 @@ function RoutesPage() {
         element={
           <AuthRoute authRequired={true}>
             <Page/>
-          </AuthRoute>
-        }
-      />
-      <Route
-        path="/configuration/customer"
-        element={
-          <AuthRoute authRequired={true}>
-            <Customer/>
           </AuthRoute>
         }
       />

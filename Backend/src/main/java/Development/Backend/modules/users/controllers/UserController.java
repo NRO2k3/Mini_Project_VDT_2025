@@ -62,6 +62,24 @@ public class UserController {
     return ResponseEntity.ok(response);
   }
 
+  @GetMapping("list/filter")
+  public ResponseEntity<ApiResponse<?>> UserFilter(@RequestParam String email) {
+    User user = userRepository.findByEmail(email).orElseThrow(() -> new ErrorException("User không tồn tại", HttpStatus.BAD_REQUEST) );
+    UserResponse userResponse = UserResponse.builder()
+    .id(user.getId())
+    .email(user.getEmail())
+    .name(user.getName())
+    .phone(user.getPhone())
+    .role(user.getRoleId().getName())
+    .build();
+
+    List<UserResponse> userList = List.of(userResponse);
+    ApiResponse<List<UserResponse>> response = ApiResponse.ok(
+    userList
+    ,"Get Users Successfully");
+    return ResponseEntity.ok(response);
+  }
+
   @PutMapping("update")
   public ResponseEntity<ApiResponse<?>> updateUser(@Valid @RequestBody UpdateUserRequest request ) {
     userService.updateUserService(request);

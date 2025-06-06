@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 public class AppointmentCustomerResponse {
   private final Long id;
   private final String email;
+  private final String productName;
   private final String productType;
   private final String status;
   private final String message;

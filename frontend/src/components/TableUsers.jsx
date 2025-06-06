@@ -1,6 +1,6 @@
 import { Box, Button, Menu, MenuItem, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import React, { useContext, useEffect, useState } from 'react'
-import { delete_object, delete_user, getData, requestWithAuth } from '../api/auth';
+import { delete_object, getData, requestWithAuth } from '../api/auth';
 import {useNavigate } from "react-router-dom";
 import { ParamContext } from '../App';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -8,6 +8,8 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import CreateUserDialog from './Dialog/CreateUserDialog';
 import SettingUserDialog from './Dialog/SettingUserDialog';
 import ConfirmDialog from './Dialog/ConfirmDialog';
+import { TextField, IconButton, InputAdornment } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 
 function TableUsers() {
   const {host} = useContext(ParamContext);
@@ -16,6 +18,7 @@ function TableUsers() {
   const url_list = `https://${host}/api/v1/user/list`;
   const [userIdToDelete, setUserIdToDelete] = useState(null);
   const [openFilter, setOpenFilter] = useState(null);
+  const [userEmail, setUserEmail] = useState(null);
 
   const handleDelete= async(id)=>{
     setUserIdToDelete(null)
@@ -40,6 +43,10 @@ function TableUsers() {
     setOpenFilter(null);
   };
   
+  const handleOnClick = async()=>{
+    const url_filter= `https://${host}/api/v1/user/list/filter?email=${userEmail}`
+    await getData(url_filter, setDataUser, navigate);
+  }
 
   useEffect(()=>{
     getData(url_list, setDataUser, navigate)
@@ -50,6 +57,24 @@ function TableUsers() {
       <TableContainer component={Paper} sx={{ backgroundColor: "white",  height: "560px" , width: "1200px", marginTop: "40px", border: '1px solid #ccc', overflowX: "auto", overflowY: "auto"}}>
       <Box sx={{ textAlign: "center", p: 2,}}>
         <Typography variant='h5' fontWeight={'bold'}>User Profile</Typography>
+      </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mr: 1, mb: 1 }}>
+        <TextField
+          id="search-bar"
+          label="Enter a email user"
+          variant="outlined"
+          size="small"
+          onChange={(e) => setUserEmail(e.target.value)}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton type="submit" aria-label="search" onClick={handleOnClick}>
+                  <SearchIcon />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
       </Box>
       <Table size="small" sx={{ tableLayout: 'fixed', width: '100%' }}>
         <TableHead>

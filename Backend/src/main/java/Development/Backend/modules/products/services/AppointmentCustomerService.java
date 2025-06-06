@@ -1,5 +1,8 @@
 package Development.Backend.modules.products.services;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -9,14 +12,19 @@ import Development.Backend.handlers.custom_exception.ErrorException;
 import Development.Backend.modules.products.dtos.requests.AppointmentCustomerRequest;
 import Development.Backend.modules.products.entities.AppointmentCustomer;
 import Development.Backend.modules.products.entities.BankingProduct;
+import Development.Backend.modules.products.entities.TypeBanking;
 import Development.Backend.modules.products.repositories.AppointmentCustomerRepository;
 import Development.Backend.modules.products.repositories.BankingProductRepository;
+import Development.Backend.modules.products.repositories.TypeBankingRepository;
 import Development.Backend.modules.users.entities.User;
 import Development.Backend.modules.users.repositories.UserRepository;
 
 @Service
 public class AppointmentCustomerService {
   
+  @Autowired
+  private TypeBankingRepository typeBankingRepository;
+
   @Autowired
   private UserRepository userRepository;
 
@@ -53,5 +61,25 @@ public class AppointmentCustomerService {
     AppointmentCustomer appointmentCustomer = appointmentCustomerRepository.findById(id).orElseThrow(() -> new ErrorException("Appointment không tồn tại vui lòng tạo trước", HttpStatus.BAD_REQUEST));
 
     appointmentCustomerRepository.delete(appointmentCustomer);
+  }
+
+  public List<AppointmentCustomer> getAppointmentByTypeService(String type){
+    TypeBanking type_obj = typeBankingRepository.findByName(type).orElseThrow(() -> new ErrorException("Type không tồn tại", HttpStatus.BAD_REQUEST));
+    return type_obj.getBankingProduct().stream().flatMap(product -> product.getAppointment().stream()).collect(Collectors.toList());
+  }
+
+  public List<AppointmentCustomer> getAppointmentUserAndTypeService(String type){
+    String email = SecurityContextHolder.getContext().getAuthentication().getName();
+    User user = (userRepository.findByEmail(email)).orElseThrow(()-> new ErrorException("User Không Tồn Tại",HttpStatus.BAD_REQUEST));
+    return user.getAppointment().stream().filter(appointment -> appointment.getProductId().getTypeId().getName().equals(type)).collect(Collectors.toList());
+  }
+
+  public List<AppointmentCustomer> getAppointmentByEmailService(String email){
+    User user = (userRepository.findByEmail(email)).orElseThrow(()-> new ErrorException("User Không Tồn Tại",HttpStatus.BAD_REQUEST));
+    return user.getAppointment();
+  }
+
+  public List<AppointmentCustomer> getAppointmentByStatusService(String status){
+    return appointmentCustomerRepository.findByStatusOrderByDateDesc(status);
   }
 }

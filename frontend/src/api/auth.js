@@ -147,11 +147,12 @@ export async function getData(url, setData, navigate ){
       setData(data.data);
       return true;
     } else {
-      setData(null);
+      alert("Error to Get")
+      return false;
     }
   } catch (error) {
-    console.error("Fetch error:", error);
-    setData(null);
+    alert("Error to Get")
+    return false;
   }
 }
 

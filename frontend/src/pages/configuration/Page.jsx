@@ -5,9 +5,15 @@ import { Tabs, Tab, Box, Grid } from '@mui/material'
 import TableUsers from '../../components/TableUsers'
 import TableInRate from '../../components/TableInRate'
 import TableProducts from '../../components/TableProducts'
+import TableCustomer from '../../components/TableCustomer'
 
 function Page() {
   const [tabValue, setTabValue] = useState(0)
+  const role = localStorage.getItem("role")
+  const adminTabs = ["Users", "Interest Rate", "Products", "Customer"];
+  const assistantTab = ["Customer"];
+
+  const tabLabels = role === "ADMIN" ? adminTabs : assistantTab;
 
   const handleChange = (event, newValue) => {
     setTabValue(newValue)
@@ -27,9 +33,9 @@ function Page() {
               fontWeight: 'bold'
             }}}
           >
-            <Tab label="Users"/>
-            <Tab label="Interest Rate"/>
-            <Tab label="Products"/>
+            {tabLabels.map((label, index) => (
+              <Tab key={index} label={label} />
+            ))}
           </Tabs>
         </Grid>
 
@@ -43,9 +49,16 @@ function Page() {
               alignItems: 'center',
             }}
           >
-            {tabValue === 0 && <TableUsers/>}
-            {tabValue === 1 && <TableInRate/>}
-            {tabValue === 2 && <TableProducts/>}
+          {role === "ADMIN" ? (
+            <>
+              {tabValue === 0 && <TableUsers />}
+              {tabValue === 1 && <TableInRate />}
+              {tabValue === 2 && <TableProducts />}
+              {tabValue === 3 && <TableCustomer />}
+            </>
+          ) :
+            tabValue === 0 && <TableCustomer />
+          }
           </Box>
         </Grid>
       </Grid>

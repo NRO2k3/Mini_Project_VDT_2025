@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -56,10 +57,11 @@ public class AppointmentCustomerController {
 
   @GetMapping("list")
   public ResponseEntity<ApiResponse<List<AppointmentCustomerResponse>>> listBankingProduct(){
-    List<AppointmentCustomerResponse> data = (appointmentCustomerRepository.findAll()).stream().map(appointment -> AppointmentCustomerResponse
+    List<AppointmentCustomerResponse> data = (appointmentCustomerRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"))).stream().map(appointment -> AppointmentCustomerResponse
     .builder()
     .id(appointment.getId())
     .email(appointment.getUserId().getEmail())
+    .productName(appointment.getProductId().getName())
     .productType(appointment.getProductId().getTypeId().getName())
     .status(appointment.getStatus())
     .message(appointment.getMessage())
@@ -67,6 +69,74 @@ public class AppointmentCustomerController {
     .date(appointment.getDate())
     .build()).collect(Collectors.toList());
     ApiResponse<List<AppointmentCustomerResponse>> response = ApiResponse.ok(data, "Get Appointment Successfully");
+    return ResponseEntity.ok(response);
+  }
+
+  @GetMapping("list/filter")
+  public ResponseEntity<ApiResponse<List<AppointmentCustomerResponse>>> getAppointmentByType(@RequestParam String type){
+    List<AppointmentCustomerResponse> appointments = (appointmentCustomerService.getAppointmentByTypeService(type)).stream().map(appointment -> AppointmentCustomerResponse.builder()
+    .id(appointment.getId())
+    .email(appointment.getUserId().getEmail())
+    .productName(appointment.getProductId().getName())
+    .productType(appointment.getProductId().getTypeId().getName())
+    .status(appointment.getStatus())
+    .message(appointment.getMessage())
+    .amount(appointment.getAmount())
+    .date(appointment.getDate())
+    .build()
+    ).collect(Collectors.toList());
+    ApiResponse<List<AppointmentCustomerResponse>> response = ApiResponse.ok(appointments, "Get BankingProduct Successfully");
+    return ResponseEntity.ok(response);
+  }
+
+  @GetMapping("list/filter/email")
+  public ResponseEntity<ApiResponse<List<AppointmentCustomerResponse>>> getAppointmentByEmail(@RequestParam String email){
+    List<AppointmentCustomerResponse> appointments = (appointmentCustomerService.getAppointmentByEmailService(email)).stream().map(appointment -> AppointmentCustomerResponse.builder()
+    .id(appointment.getId())
+    .email(appointment.getUserId().getEmail())
+    .productName(appointment.getProductId().getName())
+    .productType(appointment.getProductId().getTypeId().getName())
+    .status(appointment.getStatus())
+    .message(appointment.getMessage())
+    .amount(appointment.getAmount())
+    .date(appointment.getDate())
+    .build()
+    ).collect(Collectors.toList());
+    ApiResponse<List<AppointmentCustomerResponse>> response = ApiResponse.ok(appointments, "Get BankingProduct Successfully");
+    return ResponseEntity.ok(response);
+  }
+
+  @GetMapping("list/user/filter")
+  public ResponseEntity<ApiResponse<List<AppointmentCustomerResponse>>> getAppointmentUserAndType(@RequestParam String type){
+    List<AppointmentCustomerResponse> appointments = (appointmentCustomerService.getAppointmentUserAndTypeService(type)).stream().map(appointment -> AppointmentCustomerResponse.builder()
+    .id(appointment.getId())
+    .email(appointment.getUserId().getEmail())
+    .productName(appointment.getProductId().getName())
+    .productType(appointment.getProductId().getTypeId().getName())
+    .status(appointment.getStatus())
+    .message(appointment.getMessage())
+    .amount(appointment.getAmount())
+    .date(appointment.getDate())
+    .build()
+    ).collect(Collectors.toList());
+    ApiResponse<List<AppointmentCustomerResponse>> response = ApiResponse.ok(appointments, "Get BankingProduct Successfully");
+    return ResponseEntity.ok(response);
+  }
+
+  @GetMapping("list/filter/status")
+  public ResponseEntity<ApiResponse<List<AppointmentCustomerResponse>>> getAppointmentByStatus(@RequestParam String status){
+    List<AppointmentCustomerResponse> appointments = (appointmentCustomerService.getAppointmentByStatusService(status)).stream().map(appointment -> AppointmentCustomerResponse.builder()
+    .id(appointment.getId())
+    .email(appointment.getUserId().getEmail())
+    .productName(appointment.getProductId().getName())
+    .productType(appointment.getProductId().getTypeId().getName())
+    .status(appointment.getStatus())
+    .message(appointment.getMessage())
+    .amount(appointment.getAmount())
+    .date(appointment.getDate())
+    .build()
+    ).collect(Collectors.toList());
+    ApiResponse<List<AppointmentCustomerResponse>> response = ApiResponse.ok(appointments, "Get BankingProduct Successfully");
     return ResponseEntity.ok(response);
   }
 }

@@ -15,7 +15,6 @@ function Topbar ()  {
 	const [hoveredItem, setHoveredItem] = useState(null);
   const [openMenu, setOpenMenu] = useState(null);
 	const [openProducts, setOpenProducts] = useState(null);
-	const [openConfig, setOpenConfig] = useState(null);
 	const navigate = useNavigate();
 	const role = localStorage.getItem("role")
 	const username = localStorage.getItem("username")
@@ -97,7 +96,7 @@ function Topbar ()  {
 					paddingLeft="5%"
         >
 						<IconButton
-							aria-control='products-menu'
+							aria-controls='products-menu'
 							onClick={e => setOpenProducts(e.currentTarget)}
 							onMouseEnter={() => setHoveredItem("products")}
 							onMouseLeave={() => setHoveredItem(null)}
@@ -137,14 +136,13 @@ function Topbar ()  {
 					</Menu>
 				</Box>
 				{	role === "ADMIN" || role === "ASSISTANT" ?
-					<Box display="flex"
+				<Box display="flex"
 					justifyContent="center"
 					alignItems="center"
 					paddingLeft="5%"
 				>
 					<IconButton
-						aria-control='configurations-menu'
-						onClick={e => setOpenConfig(e.currentTarget)}
+						component={Link} to="/configuration/page"
 						onMouseEnter={() => setHoveredItem("configuration")}
 						onMouseLeave={() => setHoveredItem(null)}
 					>
@@ -157,34 +155,7 @@ function Topbar ()  {
 							Configuration
 						</Typography>
 					</IconButton>
-					<Menu
-						id='configurations-menu'
-						open={Boolean(openConfig)}
-						anchorEl={openConfig}
-						onClose={() => setOpenConfig(null)}
-						disableAutoFocusItem
-						slotProps={{
-							paper: {
-								style: {
-									minWidth: '150px'
-								}
-							}
-						}}
-					>
-						<MenuItem component={Link} to="/configuration/customer">
-							<Typography variant="h6" component='span' pl={2}>
-								Customer
-							</Typography>
-						</MenuItem>
-						{role === "ADMIN"?
-							<MenuItem component={Link} to="/configuration/page">
-							<Typography variant="h6" component='span' pl={2}>
-								Page
-							</Typography>
-						</MenuItem>
-						:null}
-					</Menu>
-					</Box>
+				</Box>
 				:null
 				}
 		</Box>
@@ -192,7 +163,7 @@ function Topbar ()  {
 		<Box display="flex">
 				<Box display="flex" alignItems="center">
 					<IconButton
-						aria-control='profile-menu'
+						aria-controls='profile-menu'
 						onClick={e => setOpenMenu(e.currentTarget)}
 					>
 						<PersonOutlinedIcon style={{ fill: 'white' }}/>
