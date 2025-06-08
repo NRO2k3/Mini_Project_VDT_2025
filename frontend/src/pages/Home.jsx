@@ -1,9 +1,10 @@
 import React from 'react'
 import Topbar from "../layouts/Topbar"
 import Footer from "../layouts/Footer"
-import { Grid, Typography, Box, Card, CardMedia, ListItem, ListItemText, List } from '@mui/material';
+import { Grid, Typography, Box, Card, CardMedia, ListItem, ListItemText, List, useMediaQuery } from '@mui/material';
 
 function Home() {
+  const isMobile = useMediaQuery('(max-width:600px)');
   const data = {
     "1": "VIETTEL LÀ NGÔI NHÀ CHUNG",
     "2": "TRUYỀN THỐNG VÀ CÁCH LÀM CỦA NGƯỜI LÍNH",
@@ -31,22 +32,21 @@ function Home() {
   return (
     <>
       <Topbar />
-      <Box display="flex" justifyContent="center" sx={{ maxWidth: "1536px", mx: "auto" }}>
+      <Box display="flex" justifyContent="center" sx={{ maxWidth: isMobile ? "600px" :"1536px", mx: "auto" }}>
         <Card sx={{ width: "100%" }}>
           <CardMedia
             component="img"
-            height="600"
+            height= {isMobile ? "400" : "600"}
             image="/Viettel.jpg"
             alt="Ảnh minh họa"
           />
         </Card>
       </Box>
-
-      <Box display="flex" justifyContent="center" mt={1}>
+      <Box display="flex" flexDirection={{ xs: 'column', md: 'row' }} justifyContent="center" mt={1}>
         <Box p={4} maxWidth="800px" mx="auto" border={"1px solid black"} m={1} borderRadius={'20px'}>
 
           <Box display="flex" justifyContent="center">
-            <Typography variant='h4'
+            <Typography variant={isMobile ? 'h5' :'h4'}
             fontWeight={'bold'}
             border={"1px solid black"}
             mb={2} borderRadius={'20px'}
@@ -61,7 +61,7 @@ function Home() {
         </Box>
         <Box p={4} maxWidth="1000px" mx="auto" border={"1px solid black"} m={1} borderRadius={'20px'}>
         <Box display="flex" justifyContent="center">
-          <Typography variant='h4'
+          <Typography variant={isMobile ? 'h5' :'h4'}
             fontWeight={'bold'}
             border={"1px solid black"}
             mb={2} borderRadius={'20px'}
@@ -79,7 +79,7 @@ function Home() {
           </List>
         </Box>
       </Box>
-      <Box display="flex" alignItems="center" justifyContent="center" mt={2}  border={"1px solid black"} borderRadius={'20px'}>
+      <Box display="flex" alignItems="center" justifyContent="center" mt={2}  border={"1px solid black"} borderRadius={'20px'} flexDirection={{ xs: 'column', md: 'row' }}>
         <Typography variant="h4" color='error' fontWeight="bold" ml={"14px"} mr={"14px"}>TRIẾT LÝ VĂN HÓA</Typography>
         <Grid container spacing={4} p={4}>
           {Object.entries(data).map(([key, value]) => (
@@ -114,15 +114,16 @@ function Home() {
         </Grid>
       </Box>
       <Box display="flex"
-      alignItems="center"
-      justifyContent="center"
-      border={"1px solid black"}
-      borderRadius={'20px'}
-      mt={2}
-      mb={2}
+        alignItems="center"
+        justifyContent="center"
+        flexDirection={{ xs: 'column', md: 'row' }}
+        border={"1px solid black"}
+        borderRadius={'20px'}
+        mt={2}
+        mb={2}
       >
-        <Typography variant="h3" color='error' fontWeight="bold" ml={"30px"} mr={"10px"}>TRIẾT LÝ HÀNH ĐỘNG</Typography>
-        <Grid container spacing={12} p={12}>
+        <Typography variant={isMobile ? 'h4' :'h3'} color='error' fontWeight="bold" ml={"30px"} mr={"10px"}>TRIẾT LÝ HÀNH ĐỘNG</Typography>
+        <Grid container spacing={isMobile ? 4 : 12} p={isMobile ? 4 : 12}>
           {Object.entries(data_1).map(([key, value]) => (
             <Grid>
               <Typography variant="h5"

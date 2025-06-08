@@ -1,4 +1,4 @@
-import { Box, IconButton, Typography, Menu, MenuItem } from "@mui/material";
+import { Box, IconButton, Typography, Menu, MenuItem, useMediaQuery, ListItemIcon, Drawer, List, ListItem, ListItemText, Divider, Collapse, ListItemButton } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
@@ -9,8 +9,14 @@ import logo from '../assets/logo_lab.png';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { getData, logout, verifyAccessToken, verifyRefreshToken } from "../api/auth";
 import { ParamContext } from "../App";
+import MenuIcon from "@mui/icons-material/Menu";
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
 
 function Topbar ()  {
+	const isMobile = useMediaQuery('(max-width:600px)');
+	const [drawerOpen, setDrawerOpen] = useState(false);
 	const {setIsSignin, host} = useContext(ParamContext);
 	const [hoveredItem, setHoveredItem] = useState(null);
   const [openMenu, setOpenMenu] = useState(null);
@@ -20,6 +26,7 @@ function Topbar ()  {
 	const username = localStorage.getItem("username")
   const [dataType, setDataType] = useState([]);
 	const url_list_type = `https://${host}/api/v1/banking_product/list/type`;
+	const [openProductsList, setOpenProductsList] = useState(false);
 
 	const handleLogout = async ()=>{
 		if(!await verifyAccessToken()){
@@ -57,109 +64,163 @@ function Topbar ()  {
 				backgroundColor="black"
 		>
 		<Box display="flex">
-				<Box display="flex"
-					justifyContent="center"
-					alignItems="center"
-					width={100}
-					height={50}
-					>
-					<img
+			<Box
+				display="flex"
+				justifyContent="center"
+				alignItems="center"
+				width={isMobile ? 60 : 100}
+				height={50}
+			>
+				<img
 					alt="logo"
-					style={{ maxWidth: '150%', maxHeight: '150%' }}
 					src={logo}
-					/>
-				</Box>
+					style={{
+						maxWidth: '100%',
+						maxHeight: '100%',
+						objectFit: 'contain'
+					}}
+				/>
+</Box>
+			{	isMobile ? <>
+				<IconButton onClick={() => setDrawerOpen(true)} sx={{ color: "white", ml: 1 }}>
+          <MenuIcon />
+        </IconButton>
+				<Drawer anchor="left" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
+					<Box width={250} role="presentation" onKeyDown={() => setDrawerOpen(false)}>
+						<List>
+							<ListItem button component={Link} to="/home">
+								<ListItemIcon><HomeIcon /></ListItemIcon>
+								<ListItemText primary="Home" />
+							</ListItem>
 
-				<Box display="flex"
-					justifyContent="center"
-					alignItems="center"
-					paddingLeft={role === "ADMIN"||role ==="ASSISTANT" ? "1%" : "10%"}>
-					<Link to="/home">
-						<IconButton
-							onMouseEnter={() => setHoveredItem("home")}
-							onMouseLeave={() => setHoveredItem(null)}
+							<ListItemButton onClick={() => setOpenProductsList(!openProductsList)}>
+								<ListItemIcon><ShoppingCartIcon /></ListItemIcon>
+								<ListItemText primary="Products" />
+								{openProductsList ? <ExpandLess /> : <ExpandMore />}
+							</ListItemButton>
+
+							<Collapse in={openProductsList} timeout="auto" unmountOnExit>
+								<List component="div" disablePadding>
+									{dataType.map((type) => (
+										<ListItemButton
+											key={type.id}
+											sx={{ pl: 4 }}
+											component={Link}
+											to="/product/landing"
+											state={{ typeName: type.name }}
+										>
+											<ListItemIcon><ShoppingCartIcon fontSize="small" /></ListItemIcon>
+											<ListItemText primary={type.name} />
+										</ListItemButton>
+									))}
+								</List>
+							</Collapse>
+
+							{(role === "ADMIN" || role === "ASSISTANT") && (
+								<ListItem button component={Link} to="/configuration/page">
+									<ListItemIcon><SettingsIcon /></ListItemIcon>
+									<ListItemText primary="Configuration" />
+								</ListItem>
+							)}
+						</List>
+						<Divider/>
+					</Box>
+        </Drawer>
+			</>
+				:
+					<>
+						<Box display="flex"
+							justifyContent="center"
+							alignItems="center"
+							paddingLeft={role === "ADMIN"||role ==="ASSISTANT" ? "1%" : "10%"}>
+							<Link to="/home">
+								<IconButton
+									onMouseEnter={() => setHoveredItem("home")}
+									onMouseLeave={() => setHoveredItem(null)}
+								>
+									<HomeIcon style={{ fill: 'white' }}/>
+									<Typography variant="h6"
+												color="white"
+												display="inline"
+												paddingLeft="5%"
+												style={{fontWeight: hoveredItem === "home" ? 'bold' : 'normal' ,  transition: 'font-weight 0.15s', whiteSpace: "nowrap", }}>
+										Home
+									</Typography>
+								</IconButton>
+							</Link>
+						</Box>
+						<Box display="flex"
+							justifyContent="center"
+							alignItems="center"
+							paddingLeft="5%"
 						>
-							<HomeIcon style={{ fill: 'white' }}/>
-							<Typography variant="h6"
-										color="white"
-										display="inline"
-										paddingLeft="5%"
-										style={{fontWeight: hoveredItem === "home" ? 'bold' : 'normal' ,  transition: 'font-weight 0.15s', whiteSpace: "nowrap", }}>
-								Home
-							</Typography>
-						</IconButton>
-					</Link>
-				</Box>
-				<Box display="flex"
-					justifyContent="center"
-					alignItems="center"
-					paddingLeft="5%"
-        >
-						<IconButton
-							aria-controls='products-menu'
-							onClick={e => setOpenProducts(e.currentTarget)}
-							onMouseEnter={() => setHoveredItem("products")}
-							onMouseLeave={() => setHoveredItem(null)}
-						>
-							<SettingsIcon style={{ fill: 'white' }}/>
-							<Typography variant='h6'
-										color="white"
-										display="inline"
-										paddingLeft="5%"
-										style={{ fontWeight: hoveredItem === "products" ? 'bold' : 'normal' ,  transition: 'font-weight 0.15s', whiteSpace: "nowrap",}}>
-								Products
-							</Typography>
-						</IconButton>
-						<Menu
-						id='products-menu'
-						open={Boolean(openProducts)}
-						anchorEl={openProducts}
-						onClose={() => setOpenProducts(null)}
-						disableAutoFocusItem
-						slotProps={{
-							paper: {
-								style: {
-									minWidth: '100px'
-								}
+								<IconButton
+									aria-controls='products-menu'
+									onClick={e => setOpenProducts(e.currentTarget)}
+									onMouseEnter={() => setHoveredItem("products")}
+									onMouseLeave={() => setHoveredItem(null)}
+								>
+									<ShoppingCartIcon style={{ fill: 'white' }}/>
+									<Typography variant='h6'
+												color="white"
+												display="inline"
+												paddingLeft="5%"
+												style={{ fontWeight: hoveredItem === "products" ? 'bold' : 'normal' ,  transition: 'font-weight 0.15s', whiteSpace: "nowrap",}}>
+										Products
+									</Typography>
+								</IconButton>
+								<Menu
+								id='products-menu'
+								open={Boolean(openProducts)}
+								anchorEl={openProducts}
+								onClose={() => setOpenProducts(null)}
+								disableAutoFocusItem
+								slotProps={{
+									paper: {
+										style: {
+											minWidth: '100px'
+										}
+									}
+								}}
+							>
+							{
+								dataType.map((type) => (
+								<MenuItem onClick={()=>setOpenProducts(null)} key={type.id} component={Link}  to={"/product/landing"} state={{typeName:type.name}}>
+									<ShoppingCartIcon fontSize="small"/>
+									<Typography variant="h6" component='span' pl={2}>
+										{type.name}
+									</Typography>
+								</MenuItem>
+								))
 							}
-						}}
-					>
-					{
-						dataType.map((type) => (
-						<MenuItem key={type.id} component={Link}  to={"/product/landing"} state={{typeName:type.name}}>
-							<Typography variant="h6" component='span' pl={2}>
-								{type.name}
-							</Typography>
-						</MenuItem>
-						))
-					}
-					</Menu>
-				</Box>
-				{	role === "ADMIN" || role === "ASSISTANT" ?
-				<Box display="flex"
-					justifyContent="center"
-					alignItems="center"
-					paddingLeft="5%"
-				>
-					<IconButton
-						component={Link} to="/configuration/page"
-						onMouseEnter={() => setHoveredItem("configuration")}
-						onMouseLeave={() => setHoveredItem(null)}
-					>
-						<SettingsIcon style={{ fill: 'white' }}/>
-						<Typography variant='h6'
-									color="white"
-									display="inline"
-									paddingLeft="5%"
-									style={{ fontWeight: hoveredItem === "configuration" ? 'bold' : 'normal' ,  transition: 'font-weight 0.15s', whiteSpace: "nowrap",}}>
-							Configuration
-						</Typography>
-					</IconButton>
-				</Box>
-				:null
-				}
+							</Menu>
+						</Box>
+						{	role === "ADMIN" || role === "ASSISTANT" ?
+						<Box display="flex"
+							justifyContent="center"
+							alignItems="center"
+							paddingLeft="5%"
+						>
+							<IconButton
+								component={Link} to="/configuration/page"
+								onMouseEnter={() => setHoveredItem("configuration")}
+								onMouseLeave={() => setHoveredItem(null)}
+							>
+								<SettingsIcon style={{ fill: 'white' }}/>
+								<Typography variant='h6'
+											color="white"
+											display="inline"
+											paddingLeft="5%"
+											style={{ fontWeight: hoveredItem === "configuration" ? 'bold' : 'normal' ,  transition: 'font-weight 0.15s', whiteSpace: "nowrap",}}>
+									Configuration
+								</Typography>
+							</IconButton>
+						</Box>
+						:null
+						}
+					</>
+			}
 		</Box>
-
 		<Box display="flex">
 				<Box display="flex" alignItems="center">
 					<IconButton

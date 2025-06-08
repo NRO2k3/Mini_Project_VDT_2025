@@ -1,8 +1,9 @@
 package Development.Backend.modules.users.services;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -94,9 +95,9 @@ public class UserService{
     userRepository.delete(user);
   }
 
-  public List<User> getUserByRoleService(String role){
+  public Page<User> getUserByRoleService(String role, int page, int size){
     Role role_ob = roleRepository.findByName(role).orElseThrow(() -> new ErrorException("Role không tồn tại", HttpStatus.BAD_REQUEST));
-    // return userRepository.findByRoleId(role_ob);
-    return role_ob.getUsers();
+    Pageable pageable = PageRequest.of(page,size);
+    return userRepository.findByRoleId(role_ob, pageable);
   }
 }

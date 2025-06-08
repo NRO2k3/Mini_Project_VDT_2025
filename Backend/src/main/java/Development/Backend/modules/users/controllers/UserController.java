@@ -1,9 +1,14 @@
 package Development.Backend.modules.users.controllers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -95,8 +100,11 @@ public class UserController {
   }
 
   @GetMapping("list/role")
-  public ResponseEntity<?> getUserByRole(@RequestParam String role){
-    List<UserResponse> users = (userService.getUserByRoleService(role)).stream().map(user -> UserResponse.builder()
+  public ResponseEntity<?> getUserByRole(@RequestParam String role, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "30") int size){
+
+    Page<User> userPage = userService.getUserByRoleService(role, page, size);
+
+    List<UserResponse> users = userPage.getContent().stream().map(user -> UserResponse.builder()
     .id(user.getId())
     .email(user.getEmail())
     .name(user.getName())
@@ -104,8 +112,12 @@ public class UserController {
     .role(user.getRoleId().getName())
     .build()
     ).collect(Collectors.toList());
-    ApiResponse<List<UserResponse>> response = ApiResponse.ok(users, "Get Users Successfully");
-    return ResponseEntity.ok(response);
+
+    Map<String, Object> response = new HashMap<>();
+    response.put("users", users);
+    response.put("totalPages", userPage.getTotalPages());
+    response.put("currentPage", userPage.getNumber());
+    return ResponseEntity.ok(ApiResponse.ok(response, "Get users by role successfully"));
   }
 
   @GetMapping("me")
@@ -125,4 +137,30 @@ public class UserController {
     ApiResponse<UserResponse> response = ApiResponse.ok(userResource, "Get You Successfully");
     return ResponseEntity.ok(response);
   }
+
+  @GetMapping("list/page")
+  public ResponseEntity<ApiResponse<?>> listUser( @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "30") int size){
+    Pageable pageable = PageRequest.of(page, size);
+    Page<User> userPage = userRepository.findAll(pageable);
+
+    List<UserResponse> users = userPage.getContent().stream()
+        .map(user -> UserResponse.builder()
+            .id(user.getId())
+            .email(user.getEmail())
+            .name(user.getName())
+            .phone(user.getPhone())
+            .role(user.getRoleId().getName())
+            .build())
+        .collect(Collectors.toList());
+
+    Map<String, Object> result = new HashMap<>();
+    result.put("users", users);
+    result.put("totalPages", userPage.getTotalPages());
+    result.put("currentPage", userPage.getNumber());
+    result.put("totalElements", userPage.getTotalElements());
+
+    ApiResponse<?> response = ApiResponse.ok(result, "Get Users Successfully");
+    return ResponseEntity.ok(response);
+}
+
 }

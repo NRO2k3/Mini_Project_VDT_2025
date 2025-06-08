@@ -11,9 +11,10 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import { Language, Public, Share, Twitter } from '@mui/icons-material';
 import CopyRight from '../components/CopyRight';
 import MapboxMap from '../components/MapboxMap';
-
+import { useMediaQuery } from '@mui/material';
 
 function Footer() {
+    const isMobile = useMediaQuery('(max-width:600px)');
     const footers = [
         {
             title: "Phone",
@@ -82,7 +83,7 @@ function Footer() {
                             </Link>
                         </Box>
                     </Grid >
-                    <Grid item xs={12} sm={12} md={6} sx={{ width: '560px', ml: 12 }}>
+                    <Grid item xs={12} sm={12} md={6} sx={{ width: '560px', ml: !isMobile ? 12: null }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
                         <Typography variant="h5" color="text.primary" gutterBottom>
                             Location

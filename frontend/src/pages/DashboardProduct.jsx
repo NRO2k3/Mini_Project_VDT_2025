@@ -1,12 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react'
 import Topbar from '../layouts/Topbar'
 import Footer from '../layouts/Footer'
-import { useLocation, useNavigate } from 'react-router-dom';
-import { Box, Card, CardContent, Typography, Divider, Stack, Grid, TextField, MenuItem } from '@mui/material';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Box, Card, CardContent, Typography, Divider, Stack, Grid, TextField, MenuItem, Button } from '@mui/material';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import EditCalendarIcon from '@mui/icons-material/EditCalendar';
 import { getData } from '../api/auth';
 import { ParamContext } from '../App';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 function DashboardProduct() {
   const {host} = useContext(ParamContext);
@@ -41,7 +42,9 @@ function DashboardProduct() {
   return (
     <>
       <Topbar />
-
+      <Button component={Link} to="/product/landing" state={{ typeName: product.type  }} sx={{ border: "1px solid black", borderRadius: "5px", m: 2 }}>
+        <ArrowBackIcon fontSize='large' color='primary'/>
+      </Button>
       <Box display="flex" justifyContent="center" alignItems="center" sx={{ m: 3 }}>
         <Typography variant="h4" fontWeight="bold">Product Information</Typography>
       </Box>

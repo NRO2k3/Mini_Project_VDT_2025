@@ -3,6 +3,7 @@ package Development.Backend.config.databases.seeder;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -13,16 +14,13 @@ import com.github.javafaker.Faker;
 
 import Development.Backend.modules.products.entities.InterestRate;
 import Development.Backend.modules.products.entities.TypeBanking;
+import Development.Backend.modules.products.repositories.InRateRepository;
 import Development.Backend.modules.products.repositories.TypeBankingRepository;
 import Development.Backend.modules.users.entities.Role;
 import Development.Backend.modules.users.entities.User;
 import Development.Backend.modules.users.repositories.RoleRepository;
 import Development.Backend.modules.users.repositories.UserRepository;
 import jakarta.transaction.Transactional;
-
-import java.util.Random;
-
-import Development.Backend.modules.products.repositories.InRateRepository;
 
 @Component
 public class DatabaseSeeder implements CommandLineRunner{
@@ -106,7 +104,7 @@ public class DatabaseSeeder implements CommandLineRunner{
 
       List<Role> roles = List.of(adminRole, userRole, assistantRole);
 
-      int numberOfUsersToCreate = 10;
+      int numberOfUsersToCreate = 100;
 
       for (int i = 0; i < numberOfUsersToCreate; i++) {
           User user = new User();

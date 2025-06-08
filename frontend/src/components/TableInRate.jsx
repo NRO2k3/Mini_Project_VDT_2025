@@ -1,4 +1,4 @@
-import { Box, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
+import { Box, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, useMediaQuery, useTheme } from '@mui/material'
 import React, { useContext, useEffect, useState } from 'react'
 import {useNavigate } from "react-router-dom";
 import { ParamContext } from '../App';
@@ -8,8 +8,9 @@ import { delete_object, getData, requestWithAuth } from '../api/auth';
 import CreateInRateDialog from './Dialog/CreateInRateDialog';
 import SettingInRateDialog from './Dialog/SettingInRateDialog';
 
-
 function TableInRate() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const {host} = useContext(ParamContext);
   const [dataInRate, setDataInRate] = useState([]);
   const url_list = `https://${host}/api/v1/interest_rate/list`;
@@ -33,7 +34,7 @@ function TableInRate() {
       <Box sx={{ textAlign: "center", p: 2,}}>
         <Typography variant='h5' fontWeight={'bold'}>Interest Rate</Typography>
       </Box>
-      <Table size="small" sx={{ tableLayout: 'fixed', width: '100%' }}>
+      <Table size="small" sx={{tableLayout: isMobile? "auto": "fixed",width: '100%'}}>
         <TableHead>
           <TableRow>
             <TableCell align="center" sx={{fontWeight: "600", fontSize: "15px", position: "sticky", top: 0, zIndex: 1, backgroundColor: "white"}}>Id</TableCell>
