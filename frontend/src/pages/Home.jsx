@@ -37,7 +37,7 @@ function Home() {
           <CardMedia
             component="img"
             height= {isMobile ? "400" : "600"}
-            image="/Viettel.jpg"
+            image="/Viettel.webp"
             alt="Ảnh minh họa"
           />
         </Card>
