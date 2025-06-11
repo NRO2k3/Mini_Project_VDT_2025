@@ -6,7 +6,7 @@ import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, D
 import { ParamContext } from '../../App';
 import { useNavigate } from 'react-router-dom';
 
-function CreateProductDialog({setDataProduct, dataType}) {
+function CreateProductDialog({dataType, fetchProduct}) {
   const {host} = useContext(ParamContext);
   const navigate = useNavigate();
   const url_list = `https://${host}/api/v1/banking_product/list`;
@@ -35,7 +35,7 @@ function CreateProductDialog({setDataProduct, dataType}) {
                       }
     let isSuccessfull = await create_object(url_create ,dataRequest);
     if(isSuccessfull === true){
-      getData(url_list, setDataProduct, navigate);
+      fetchProduct();
       alert("Create Product Successfully");
     }
   };

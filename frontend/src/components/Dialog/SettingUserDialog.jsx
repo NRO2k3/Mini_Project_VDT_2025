@@ -2,15 +2,14 @@ import React from 'react'
 import PermDataSettingIcon from '@mui/icons-material/PermDataSetting';
 import { useContext, useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close';
-import { getData, requestWithAuth, update_object, update_user } from '../../api/auth';
+import { requestWithAuth, update_object } from '../../api/auth';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, MenuItem, TextField, Typography } from '@mui/material';
 import { ParamContext } from '../../App';
 import { useNavigate } from 'react-router-dom';
 
-function SettingUserDialog({setDataUser, user}) {
+function SettingUserDialog({user, fetchUsers}) {
   const {host} = useContext(ParamContext);
   const navigate = useNavigate();
-  const url_list = `https://${host}/api/v1/user/list`;
   const url_update = `https://${host}/api/v1/user/update`;
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -34,7 +33,7 @@ function SettingUserDialog({setDataUser, user}) {
                       }
     let isSuccessfull = await requestWithAuth(navigate, () => update_object(url_update, dataRequest));
     if(isSuccessfull === true){
-      getData(url_list, setDataUser, navigate);
+      fetchUsers()
       alert("Update User Successfully");
     }
   };

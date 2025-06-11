@@ -103,7 +103,7 @@ function TableUsers() {
             <TableCell align="center" sx={{fontWeight: "600", fontSize: "15px", position: "sticky", top: 0, zIndex: 1, backgroundColor: "white"}}>Role</TableCell>
             <TableCell align="center" sx={{fontWeight: "600", fontSize: "15px", position: "sticky", top: 0, zIndex: 1, backgroundColor: "white"}}
             >
-              <CreateUserDialog setDataUser={setDataUser}/>
+              <CreateUserDialog fetchUsers={() => fetchUsers(0, filterRole)}/>
             </TableCell>
             <TableCell align="center" sx={{fontWeight: "600", fontSize: "15px", position: "sticky", top: 0, zIndex: 1, backgroundColor: "white"}}
             >
@@ -135,7 +135,7 @@ function TableUsers() {
               <TableCell align="center" sx={{fontWeight: "400", fontSize: "13px"}}>{user.phone}</TableCell>
               <TableCell align="center" sx={{fontWeight: "400", fontSize: "13px"}}>{user.role}</TableCell>
               <TableCell align="center" sx={{fontWeight: "400", fontSize: "13px"}}>
-                <SettingUserDialog setDataUser={setDataUser} user={user}/>
+                <SettingUserDialog user={user} fetchUsers={() => fetchUsers(0, filterRole)}/>
               </TableCell>
               <TableCell align="center" sx={{fontWeight: "400", fontSize: "13px"}}>
               <Button

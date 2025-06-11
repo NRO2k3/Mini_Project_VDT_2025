@@ -81,7 +81,7 @@ function TableProducts() {
             <TableCell align="center" sx={{fontWeight: "600", fontSize: "15px", position: "sticky", top: 0, zIndex: 1, backgroundColor: "white"}}>Type</TableCell>
             <TableCell align="center" sx={{fontWeight: "600", fontSize: "15px", position: "sticky", top: 0, zIndex: 1, backgroundColor: "white"}}
             >
-              <CreateProductDialog setDataProduct={setDataProduct} dataType={dataType}/>
+              <CreateProductDialog dataType={dataType} fetchProduct={() => fetchProduct(0, filterType)}/>
             </TableCell>
             <TableCell align="center" sx={{fontWeight: "600", fontSize: "15px", position: "sticky", top: 0, zIndex: 1, backgroundColor: "white"}}
             >
@@ -134,7 +134,7 @@ function TableProducts() {
               }).format(product.maxAmount)}</TableCell>
               <TableCell align="center" sx={{fontWeight: "400", fontSize: "13px"}}>{product.type}</TableCell>
               <TableCell align="center" sx={{fontWeight: "400", fontSize: "13px"}}>
-                <SettingProductDialog setDataProduct={setDataProduct} product={product} dataType={dataType}/>
+                <SettingProductDialog product={product} dataType={dataType} fetchProduct={() => fetchProduct(0, filterType)}/>
               </TableCell>
               <TableCell align="center" sx={{fontWeight: "400", fontSize: "13px"}}>
               <Button

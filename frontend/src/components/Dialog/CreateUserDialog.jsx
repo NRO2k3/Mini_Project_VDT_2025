@@ -1,15 +1,10 @@
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
-import { create_user, getData } from '../../api/auth';
+import { create_user } from '../../api/auth';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Typography } from '@mui/material';
-import { ParamContext } from '../../App';
-import { useNavigate } from 'react-router-dom';
 
-function CreateUserDialog({setDataUser}) {
-  const {host} = useContext(ParamContext);
-  const navigate = useNavigate();
-  const url = `https://${host}/api/v1/user/list`;
+function CreateUserDialog({fetchUsers}) {
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -37,7 +32,7 @@ function CreateUserDialog({setDataUser}) {
                           }
         let isSuccessfull = await create_user(dataRequest);
         if(isSuccessfull === true){
-          getData(url, setDataUser, navigate);
+          fetchUsers();
           alert("Create User Successfully");
         }
     }

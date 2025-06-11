@@ -7,7 +7,7 @@ import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, D
 import { ParamContext } from '../../App';
 import { useNavigate } from 'react-router-dom';
 
-function SettingProductDialog({setDataProduct, product, dataType}) {
+function SettingProductDialog({product, dataType, fetchProduct}) {
   const {host} = useContext(ParamContext);
   const navigate = useNavigate();
   const url_list = `https://${host}/api/v1/banking_product/list`;
@@ -38,7 +38,7 @@ function SettingProductDialog({setDataProduct, product, dataType}) {
                       }
     let isSuccessfull = await requestWithAuth(navigate, () => update_object(url_update, dataRequest));
     if(isSuccessfull === true){
-      getData(url_list, setDataProduct, navigate);
+      fetchProduct();
       alert("Update Product Successfully");
     }
   };
