@@ -108,6 +108,7 @@ function Topbar ()  {
 											component={Link}
 											to="/product/landing"
 											state={{ typeName: type.name }}
+											onClick={()=> setDrawerOpen(false)}
 										>
 											<ListItemIcon><ShoppingCartIcon fontSize="small" /></ListItemIcon>
 											<ListItemText primary={type.name} />

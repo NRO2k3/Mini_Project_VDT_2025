@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -43,7 +44,7 @@ public class InRateController {
 
   @GetMapping("list")
   public ResponseEntity<ApiResponse<List<InRateResponse>>> listInRate() {
-    List<InRateResponse> data = (inRateRepository.findAll()).stream().map(inRate -> InRateResponse
+    List<InRateResponse> data = (inRateRepository.findAll(Sort.by(Sort.Direction.ASC, "term"))).stream().map(inRate -> InRateResponse
     .builder()
     .id(inRate.getId())
     .term(inRate.getTerm())

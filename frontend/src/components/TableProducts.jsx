@@ -12,6 +12,7 @@ import Pagination from '@mui/material/Pagination';
 
 function TableProducts() {
   const theme = useTheme();
+  const isMobile1 = useMediaQuery(theme.breakpoints.down('sm'));
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const {host} = useContext(ParamContext);
   const [dataProduct, setDataProduct] = useState([]);
@@ -65,7 +66,7 @@ function TableProducts() {
   return (
     <>
     <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-      <TableContainer component={Paper} sx={{ backgroundColor: "white",  height: "560px" , width: "1200px", marginTop: "40px", border: '1px solid #ccc', overflowX: "auto", overflowY: "auto"}}>
+      <TableContainer component={Paper} sx={{ backgroundColor: "white",  height: isMobile1? "400px": "560px" , width: isMobile1?"440px": isMobile ? "800px" :"1200px", marginTop: "40px", border: '1px solid #ccc', overflowX: "auto", overflowY: "auto"}}>
       <Box sx={{ textAlign: "center", p: 2,}}>
         <Typography variant='h5' fontWeight={'bold'}>Product Detail</Typography>
       </Box>

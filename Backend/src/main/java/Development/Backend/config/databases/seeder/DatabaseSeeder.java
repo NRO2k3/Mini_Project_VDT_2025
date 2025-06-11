@@ -1,8 +1,8 @@
 package Development.Backend.config.databases.seeder;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +12,10 @@ import org.springframework.stereotype.Component;
 
 import com.github.javafaker.Faker;
 
+import Development.Backend.modules.products.entities.BankingProduct;
 import Development.Backend.modules.products.entities.InterestRate;
 import Development.Backend.modules.products.entities.TypeBanking;
+import Development.Backend.modules.products.repositories.BankingProductRepository;
 import Development.Backend.modules.products.repositories.InRateRepository;
 import Development.Backend.modules.products.repositories.TypeBankingRepository;
 import Development.Backend.modules.users.entities.Role;
@@ -39,6 +41,9 @@ public class DatabaseSeeder implements CommandLineRunner{
 
   @Autowired
   private InRateRepository inRateRepository;
+
+  @Autowired
+  private BankingProductRepository bankingProductRepository;
 
   @Override
   @Transactional
@@ -120,15 +125,43 @@ public class DatabaseSeeder implements CommandLineRunner{
     }
 
   if(inRateRepository.count() == 0){
-    Random random = new Random();
-    for (int i = 1; i <= 36; i++) {
-        BigDecimal rate = BigDecimal.valueOf(1 + (4 * random.nextDouble()))
-                                      .setScale(2, RoundingMode.HALF_UP);
+      Map<Integer, BigDecimal> fixedRates = Map.of(
+        1, new BigDecimal("1.60"),
+        2, new BigDecimal("1.60"),
+        3, new BigDecimal("1.90"),
+        6, new BigDecimal("2.90"),
+        9, new BigDecimal("2.90"),
+        12, new BigDecimal("4.60"),
+        24, new BigDecimal("4.70"),
+        36, new BigDecimal("4.70"),
+        48, new BigDecimal("4.70"),
+        60, new BigDecimal("4.70")
+    );
 
+    for (Map.Entry<Integer, BigDecimal> entry : fixedRates.entrySet()) {
         InterestRate rateEntry = new InterestRate();
-        rateEntry.setTerm(i);
-        rateEntry.setRate(rate);
+        rateEntry.setTerm(entry.getKey());
+        rateEntry.setRate(entry.getValue());
         inRateRepository.save(rateEntry);
+    }
+  }
+  
+  if(bankingProductRepository.count() == 0){
+    Faker faker = new Faker();
+    Random random = new Random();
+    TypeBanking saving = typeBankingRepository.findByName("SAVING") .orElseThrow(() -> new RuntimeException("Type not found"));
+    TypeBanking loan = typeBankingRepository.findByName("LOAN") .orElseThrow(() -> new RuntimeException("Type not found"));
+    List<TypeBanking> types = List.of(saving, loan);
+    int numberProduct = 10;
+    for (int i = 1 ; i <= numberProduct; i++){
+      bankingProductRepository.save(BankingProduct.builder()
+      .name(faker.commerce().productName())
+      .description(faker.commerce().productName())
+      .minAmount(BigDecimal.valueOf(1000000))
+      .maxAmount(BigDecimal.valueOf(1000000000))
+      .typeId(types.get(random.nextInt(types.size())))
+      .build()
+      );
     }
   }
   }
