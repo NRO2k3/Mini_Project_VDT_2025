@@ -63,22 +63,22 @@ function Footer() {
                             display="flex"
                             justifyContent="space-evenly"
                         >
-                            <Link color="inherit" href="https://hust.edu.vn/">
+                            <Link color="inherit" href="https://hust.edu.vn/" target="_blank" rel="noopener">
                                 <GoogleIcon/>
                             </Link>
-                            <Link color="inherit" href="https://hust.edu.vn/">
+                            <Link color="inherit" href="https://hust.edu.vn/" target="_blank" rel="noopener">
                                 <FacebookIcon/>
                             </Link>
-                            <Link color="inherit" href="https://hust.edu.vn/">
+                            <Link color="inherit" href="https://hust.edu.vn/" target="_blank" rel="noopener">
                                 <Language/>
                             </Link>
-                            <Link color="inherit" href="https://hust.edu.vn/">
+                            <Link color="inherit" href="https://hust.edu.vn/" target="_blank" rel="noopener">
                                 <Twitter/>
                             </Link>
-                            <Link color="inherit" href="https://hust.edu.vn/">
+                            <Link color="inherit" href="https://hust.edu.vn/" target="_blank" rel="noopener">
                                 <Public/>
                             </Link>
-                            <Link color="inherit" href="https://hust.edu.vn/">
+                            <Link color="inherit" href="https://hust.edu.vn/" target="_blank" rel="noopener">
                                 <Share/>
                             </Link>
                         </Box>

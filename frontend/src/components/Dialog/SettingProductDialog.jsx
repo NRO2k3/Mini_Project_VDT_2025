@@ -54,6 +54,7 @@ function SettingProductDialog({product, dataType, fetchProduct}) {
         startIcon={<PermDataSettingIcon />}
         sx={{
             backgroundColor: "#ed6c02",
+            color: "#fff",
             fontSize: "10px",
             fontWeight: "bold",
             padding: "5px 12px",

@@ -107,8 +107,8 @@ function TableUsers() {
             </TableCell>
             <TableCell align="center" sx={{fontWeight: "600", fontSize: "15px", position: "sticky", top: 0, zIndex: 1, backgroundColor: "white"}}
             >
-              <Button
-                  startIcon={<FilterAltIcon/>}
+              <Button aria-label="Open Filter Menu"
+                  startIcon={<FilterAltIcon />}
                   sx={{
                       backgroundColor: "#1976d2",
                       fontSize: "10px",
@@ -118,7 +118,9 @@ function TableUsers() {
                       height: "32px"
                       }}
                   variant="contained"
-                  aria-control='filter-menu'
+                  aria-controls='filter-menu'
+                  aria-haspopup="true"
+									aria-expanded={Boolean(openFilter)}
                   onClick={e => setOpenFilter(e.currentTarget)}
                 >
                   Filter

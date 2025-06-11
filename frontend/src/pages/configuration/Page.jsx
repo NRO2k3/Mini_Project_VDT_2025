@@ -2,10 +2,12 @@ import React, { useState } from 'react'
 import Topbar from '../../layouts/Topbar'
 import Footer from '../../layouts/Footer'
 import { Tabs, Tab, Box, Grid, useMediaQuery, useTheme } from '@mui/material'
-import TableUsers from '../../components/TableUsers'
-import TableInRate from '../../components/TableInRate'
-import TableProducts from '../../components/TableProducts'
-import TableCustomer from '../../components/TableCustomer'
+import { Suspense, lazy } from 'react';
+const TableUsers = lazy(() => import('../../components/TableUsers'));
+const TableInRate = lazy(() => import('../../components/TableInRate'));
+const TableProducts = lazy(() => import('../../components/TableProducts'));
+const TableCustomer = lazy(() => import('../../components/TableCustomer'));
+
 
 function Page() {
   const theme = useTheme();
@@ -61,16 +63,18 @@ function Page() {
               alignItems: 'center',
             }}
           >
-          {role === "ADMIN" ? (
-            <>
-              {tabValue === 0 && <TableUsers />}
-              {tabValue === 1 && <TableInRate />}
-              {tabValue === 2 && <TableProducts />}
-              {tabValue === 3 && <TableCustomer />}
-            </>
-          ) :
-            tabValue === 0 && <TableCustomer />
-          }
+          <Suspense fallback={<div>Loading...</div>}>
+            {role === "ADMIN" ? (
+              <>
+                {tabValue === 0 && <TableUsers />}
+                {tabValue === 1 && <TableInRate />}
+                {tabValue === 2 && <TableProducts />}
+                {tabValue === 3 && <TableCustomer />}
+              </>
+            ) : (
+              tabValue === 0 && <TableCustomer />
+            )}
+          </Suspense>
           </Box>
         </Grid>
       </Grid>

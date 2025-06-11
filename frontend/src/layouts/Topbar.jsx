@@ -72,7 +72,7 @@ function Topbar ()  {
 				height={50}
 			>
 				<img
-					alt="logo"
+					alt="Lab Logo"
 					src={logo}
 					style={{
 						maxWidth: '100%',
@@ -156,7 +156,10 @@ function Topbar ()  {
 							paddingLeft="5%"
 						>
 								<IconButton
+									aria-label="Products"
 									aria-controls='products-menu'
+									aria-haspopup="true"
+									aria-expanded={Boolean(openMenu)}
 									onClick={e => setOpenProducts(e.currentTarget)}
 									onMouseEnter={() => setHoveredItem("products")}
 									onMouseLeave={() => setHoveredItem(null)}
@@ -226,6 +229,9 @@ function Topbar ()  {
 				<Box display="flex" alignItems="center">
 					<IconButton
 						aria-controls='profile-menu'
+						aria-label="Open profile menu"
+						aria-haspopup="true"
+						aria-expanded={Boolean(openMenu)}
 						onClick={e => setOpenMenu(e.currentTarget)}
 					>
 						<PersonOutlinedIcon style={{ fill: 'white' }}/>

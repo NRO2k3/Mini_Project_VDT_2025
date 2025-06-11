@@ -145,7 +145,9 @@ function TableCustomer() {
             <TableCell align="center" sx={{fontWeight: "600", fontSize: "15px", position: "sticky", top: 0, zIndex: 1, backgroundColor: "white", width: "250px"}}>Product Name</TableCell>
             <TableCell align="center" sx={{fontWeight: "600", fontSize: "15px", position: "sticky", top: 0, zIndex: 1, backgroundColor: "white"}}>
               <Button
-                aria-control='filter-menu'
+                aria-controls='filter-menu'
+                aria-haspopup="true"
+								aria-expanded={Boolean(openFilter)}
                 onClick={e => {
                   setOpenFilter(e.currentTarget)
                   setSelect(true);
@@ -160,7 +162,9 @@ function TableCustomer() {
             <TableCell align="center" sx={{fontWeight: "600", fontSize: "15px", position: "sticky", top: 0, zIndex: 1, backgroundColor: "white"}}>Date</TableCell>
             <TableCell align="center" sx={{fontWeight: "600", fontSize: "15px", position: "sticky", top: 0, zIndex: 1, backgroundColor: "white"}}>
               <Button
-                aria-control='filter-status'
+                aria-controls='filter-status'
+                aria-haspopup="true"
+								aria-expanded={Boolean(openFilter1)}
                 onClick={e => {
                   setOpenFilter1(e.currentTarget)
                   setSelect(false);
