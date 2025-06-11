@@ -11,6 +11,7 @@ import SettingInRateDialog from './Dialog/SettingInRateDialog';
 function TableInRate() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isMobile1 = useMediaQuery(theme.breakpoints.down('sm'));
   const {host} = useContext(ParamContext);
   const [dataInRate, setDataInRate] = useState([]);
   const url_list = `https://${host}/api/v1/interest_rate/list`;
@@ -30,7 +31,7 @@ function TableInRate() {
   },[])
   return (
     <>
-      <TableContainer component={Paper} sx={{ backgroundColor: "white",  height: "560px", marginTop: "40px", border: '1px solid #ccc', width: "600px", overflowX: "auto", overflowY: "auto"}}>
+      <TableContainer component={Paper} sx={{ backgroundColor: "white",  height: isMobile1? "400px": "560px", marginTop: "40px", border: '1px solid #ccc', width: isMobile1?"100vw": isMobile ? "100vw" :"1200px", overflowX: "auto", overflowY: "auto"}}>
       <Box sx={{ textAlign: "center", p: 2,}}>
         <Typography variant='h5' fontWeight={'bold'}>Interest Rate</Typography>
       </Box>

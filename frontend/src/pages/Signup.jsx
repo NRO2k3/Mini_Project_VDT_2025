@@ -49,74 +49,66 @@ function Signup() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
-            <Grid container spacing={2}>
-                <Grid item xs={12} sx={{width: "400px"}}>
-                    <TextField
-                    autoComplete="given-name"
-                    name="username"
-                    required
-                    fullWidth
-                    id="username"
-                    label="Username"
-                    autoFocus
-                    />
-                </Grid>
-                <Grid item xs={12} sx={{width: "400px"}}>
-                  <TextField
-                    required
-                    fullWidth
-                    id="email"
-                    label="Email Address"
-                    name="email"
-                    autoComplete="email"
-                  />
-                </Grid>
-                <Grid item xs={12} sx={{width: "400px"}}>
-                  <TextField
-                    required
-                    fullWidth
-                    name="phone"
-                    label="Phone Number"
-                    type="text"
-                    id="phone"
-                    autoComplete="phone"
-                  />
-                </Grid>
-                <Grid item xs={12} sx={{width: "400px"}}>
-                  <TextField
-                    required
-                    fullWidth
-                    name="password"
-                    label="Password"
-                    type="password"
-                    id="password"
-                    autoComplete="new-password"
-                  />
-                </Grid>
-                <Grid item xs={12} sx={{width: "400px"}}>
-                  <TextField
-                    required
-                    fullWidth
-                    name="password_verify"
-                    label="Verify Password"
-                    type="password"
-                    id="password_verify"
-                    autoComplete="new-password"
-                  />
-                </Grid>
-            </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign Up
-            </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link to="/login" variant="body2" sx={{ cursor: 'pointer' }}>
+          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3, px: 2 }}>
+            <TextField
+            autoComplete="given-name"
+            name="username"
+            required
+            fullWidth
+            id="username"
+            label="Username"
+            autoFocus
+          />
+          <TextField
+            sx={{mt:2}}
+            required
+            fullWidth
+            id="email"
+            label="Email Address"
+            name="email"
+            autoComplete="email"
+          />
+          <TextField
+            sx={{mt:2}}
+            required
+            fullWidth
+            name="phone"
+            label="Phone Number"
+            type="text"
+            id="phone"
+            autoComplete="phone"
+          />
+          <TextField
+            sx={{mt:2}}
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            autoComplete="new-password"
+          />
+          <TextField
+            sx={{mt:2}}
+            required
+            fullWidth
+            name="password_verify"
+            label="Verify Password"
+            type="password"
+            id="password_verify"
+            autoComplete="new-password"
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+          >
+            Sign Up
+          </Button>
+          <Grid container justifyContent="flex-end">
+            <Grid item>
+              <Link to="/login" variant="body2" sx={{ cursor: 'pointer' }}>
                   Sign in?
                 </Link>
               </Grid>

@@ -31,7 +31,7 @@ function RoutesPage() {
           path="/"
           element={
             <AuthRoute authRequired={true}>
-              <Home />
+                <Login />
             </AuthRoute>
           }
       />
