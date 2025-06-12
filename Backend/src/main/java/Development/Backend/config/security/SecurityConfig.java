@@ -36,9 +36,29 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/api/v1/auth/me").hasAuthority("ADMIN")
-                .requestMatchers("/api/v1/auth/**").permitAll()
-                .requestMatchers("/api/v1/user/**").permitAll()
+                .requestMatchers("/api/v1/interest_rate/create",
+                                            "/api/v1/interest_rate/update",
+                                            "/api/v1/interest_rate/delete"
+                                            ).hasAuthority("ADMIN")
+                .requestMatchers("/api/v1/banking_product/create",
+                                            "/api/v1/banking_product/update",
+                                            "/api/v1/banking_product/delete",
+                                            "/api/v1/banking_product/list/product/type",
+                                            "/api/v1/banking_product/list/page"
+                                            ).hasAuthority("ADMIN")
+                .requestMatchers("/api/v1/user/list",
+                                            "/api/v1/user/list/filter",
+                                            "/api/v1/user/delete",
+                                            "/api/v1/user/update",
+                                            "/api/v1/user/list/role",
+                                            "/api/v1/user/me"
+                                            ).hasAuthority("ADMIN")
+                .requestMatchers("/api/v1/appointment/update",
+                                            "/api/v1/appointment/list/role",
+                                            "/api/v1/appointment/list/filter",
+                                            "/api/v1/appointment/list/filter/status"
+                                            ).hasAnyAuthority("ADMIN", "ASSISTANT")
+                .requestMatchers("/api/v1/**").permitAll()
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session
