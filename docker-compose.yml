@@ -39,6 +39,7 @@ services:
       - backend
     volumes:
       - ./frontend/ssl:/etc/ssl/private:ro
+      - ./nginx/cache:/var/cache/nginx
     networks:
       - mynetwork
 
